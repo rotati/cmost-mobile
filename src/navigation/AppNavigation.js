@@ -3,6 +3,8 @@ import { StackNavigator } from 'react-navigation'
 import LoginContainer from '../containers/login'
 import MainMenuContainer from '../containers/mainMenu'
 import DownloadFormContainer from '../containers/downloadForm'
+import FillNewFormContainer from '../containers/fillNewForm'
+import FormDetailContainer from '../containers/formDetail'
 
 const RootStack = StackNavigator(
   {
@@ -27,6 +29,22 @@ const RootStack = StackNavigator(
         headerTintColor: '#fff',
         headerStyle: {backgroundColor: '#1a48a0'},
         title: 'Available Form'
+      }
+    },
+    FillNewForm: {
+      screen: FillNewFormContainer,
+      navigationOptions: {
+        headerTintColor: '#fff',
+        headerStyle: {backgroundColor: '#1a48a0'},
+        title: 'Fill New Form'
+      }
+    },
+    FormDetail: {
+      screen: FormDetailContainer,
+      navigationOptions: {
+        headerTintColor: '#fff',
+        headerStyle: { backgroundColor: '#1a48a0'},
+        title: 'Form Detail'
       }
     }
   },

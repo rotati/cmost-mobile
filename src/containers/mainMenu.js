@@ -10,7 +10,7 @@ class MainMenuContainer extends Component {
 
   renderOptions(icon, displayText, color, screen) {
     return (
-      <TouchableOpacity onPress={ () => screen == 'DownloadForm' ? this.props.navigation.navigate(screen) : alert(screen) }>
+      <TouchableOpacity onPress={ () => this.props.navigation.navigate(screen) }>
         <Card style={ [styles.options, {backgroundColor: color}] }>
           <Icon
             name={ icon }
@@ -29,12 +29,12 @@ class MainMenuContainer extends Component {
   render() {
     return (
       <ScrollView style={styles.container} showsHorizontalScrollIndicator={false}>
-        { this.renderOptions('download', "Download New Form",   "#107896", 'DownloadForm') }
-        { this.renderOptions('plus',     "Fill New Form",       "#107896", 'FillForm') }
-        { this.renderOptions('edit',     "Edit Saved Form",     "#107896", 'Edit Save Form') }
-        { this.renderOptions('send',     "Send Finalized Form", "#107896", "Send Finalized Form") }
-        { this.renderOptions('eye',      "View Send Form",      "#107896", "View Send Form") }
-        { this.renderOptions('trash',    "Delete Saved Form",   "#AD2A1A", "Delete Saved Form") }
+        { this.renderOptions("download", "Download New Form",   "#107896", "DownloadForm") }
+        { this.renderOptions("plus",     "Fill New Form",       "#107896", "FillNewForm") }
+        { this.renderOptions("edit",     "Edit Saved Form",     "#107896", "Edit Save Form") }
+        { this.renderOptions("send",     "Send Finalized Form", "#107896", "Send Finalized Form") }
+        { this.renderOptions("eye",      "View Sent Form",      "#107896", "View Send Form") }
+        { this.renderOptions("trash",    "Delete Saved Form",   "#AD2A1A", "Delete Saved Form") }
       </ScrollView>
     );
   }

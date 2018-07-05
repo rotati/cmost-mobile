@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, FlatList, Switch, View, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, FlatList, View, TouchableOpacity } from 'react-native'
 import Card from '../components/Card'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-export default class ListIconExample extends Component {
+export default class DownloadFormContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -24,9 +24,11 @@ export default class ListIconExample extends Component {
     const formCount = selectedFormId.length
 
     if (formCount === 1) {
-      alert('1 form is selected')
+      alert('1 form is downloaded')
+      this.props.navigation.navigate('MainMenu')
     } else if (formCount > 1) {
-      alert(formCount + ' forms are selected')
+      alert(formCount + ' forms are downloaded')
+      this.props.navigation.navigate('MainMenu')
     } else {
       alert('No selected form')
     }
@@ -41,22 +43,22 @@ export default class ListIconExample extends Component {
       {
         id: 1,
         name: 'Student Survey',
-        created_at: 'Today'
+        created_at: 'a few moments ago'
       },
       {
         id: 2,
-        name: 'Election',
-        created_at: 'Today'
+        name: 'Election Survey',
+        created_at: '1 hour ago'
       },
       {
         id: 3,
         name: 'Teaching Survey',
-        created_at: 'Today'
+        created_at: '9 hours ago'
       },
       {
         id: 4,
         name: 'Vihecle Survey',
-        created_at: 'Today'
+        created_at: 'Yesterday'
       },
     ]
   }

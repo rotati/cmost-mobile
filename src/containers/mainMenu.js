@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, StatusBar } from 'react-native'
+import { Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, StatusBar, View } from 'react-native'
 import Card from '../components/Card'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -29,12 +29,14 @@ class MainMenuContainer extends Component {
   render() {
     return (
       <ScrollView style={styles.container} showsHorizontalScrollIndicator={false}>
-        { this.renderOptions("download", "Download New Form",   "#107896", "DownloadForm") }
-        { this.renderOptions("plus",     "Fill New Form",       "#107896", "FillNewForm") }
-        { this.renderOptions("edit",     "Edit Saved Form",     "#107896", "Edit Save Form") }
-        { this.renderOptions("send",     "Send Finalized Form", "#107896", "Send Finalized Form") }
-        { this.renderOptions("eye",      "View Sent Form",      "#107896", "View Send Form") }
-        { this.renderOptions("trash",    "Delete Saved Form",   "#AD2A1A", "Delete Saved Form") }
+        { this.renderOptions("download", "Download New Form",   "#008CBA", "DownloadForm") }
+        { this.renderOptions("plus",     "Fill New Form",       "#008CBA", "FillNewForm") }
+        { this.renderOptions("edit",     "Edit Saved Form",     "#008CBA", "EditSavedForm") }
+        { this.renderOptions("send",     "Submit Form",         "#008CBA", "SubmitForm") }
+        { this.renderOptions("eye",      "View Sent Form",      "#008CBA", "ViewSavedForm") }
+        <View style={{ marginBottom: 10 }}>
+          { this.renderOptions("trash",    "Delete Saved Form",   "#AD2A1A", "DeleteForm") }
+        </View>
       </ScrollView>
     );
   }
@@ -43,11 +45,8 @@ class MainMenuContainer extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 5,
-    paddingRight: 5,
     paddingTop: 5,
-    flexDirection: 'row',
-    flexWrap: 'wrap'
+    paddingLeft: 5
   },
   options: {
     width: Dimensions.get('window').width - 20,

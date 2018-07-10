@@ -3,24 +3,24 @@ import { ScrollView, Text, FlatList, Switch, View, TouchableOpacity } from 'reac
 import Card from '../components/Card'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-export default class FillNewForm extends Component {
+export default class ViewSavedFormContainer extends Component {
   fakeData() {
     return [
       {
         id: 1,
-        name: 'Student Survey',
+        name: 'Student 1',
         created_at: 'a few moments ago'
       },
       {
         id: 2,
-        name: 'Election Survey',
+        name: 'Student 2',
         created_at: '1 hour ago'
       }
     ]
   }
 
   renderItem = ({ item }) => (
-    <TouchableOpacity onPress={ () => this.props.navigation.navigate('FormDetail', { id: item.id, isFirst: true, isLast: false, title: 'How helpful is your academic advisor?', hint: 'Description about academic advisor' }) }>
+    <TouchableOpacity onPress={ () => this.props.navigation.navigate('AnswerDetail')}>
       <Card style={{ marginBottom: 10 }}>
         <Text style={{ fontSize: 17, marginBottom: 5 }}>{ item.name }</Text>
         <Text style={{ fontSize: 10 }}>{ item.created_at }</Text>

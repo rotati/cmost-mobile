@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, TextInput, View, TouchableOpacity, Picker } from 'react-native'
-import Card from '../components/Card'
+import { ScrollView, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import Card from '../../components/common/Card'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default class DownloadFormContainer extends Component {
@@ -55,7 +55,7 @@ export default class DownloadFormContainer extends Component {
         }
         {
           !this.state.isLast &&
-          <TouchableOpacity onPress={ () => this.props.navigation.push('FormDetail', { isFirst: false, isLast: true, title: 'How well-maintained are the facilities at this university?', hint: 'Please description about maintained and facilities at university' }) } style={{ width: 45, height: 45, borderRadius: 40, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, right: 20 }}>
+          <TouchableOpacity onPress={ () => this.props.navigation.push('FormBuilder', { isFirst: false, isLast: true, title: 'How well-maintained are the facilities at this university?', hint: 'Please description about maintained and facilities at university' }) } style={{ width: 45, height: 45, borderRadius: 40, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, right: 20 }}>
             <Icon name='chevron-right' color='#fff' size={20} style={{ marginLeft: 5 }}/>
           </TouchableOpacity>
         }

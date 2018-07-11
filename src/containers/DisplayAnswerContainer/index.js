@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, TextInput, View, TouchableOpacity, Picker } from 'react-native'
-import Card from '../components/Card'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { ScrollView, Text, View } from 'react-native'
+import Card from '../../components/common/Card'
 
 export default class AnswerDetailContainer extends Component {
   constructor(props) {

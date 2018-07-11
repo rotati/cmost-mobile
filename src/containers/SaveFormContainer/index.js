@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, TextInput, View, TouchableOpacity, Picker } from 'react-native'
-import Card from '../components/Card'
+import Card from '../../components/common/Card'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { CheckBox } from 'react-native-elements'
+import Container from '../../components/common/Container'
+import styled from 'styled-components'
 
 export default class SaveFormContainer extends Component {
   constructor(props) {
@@ -15,7 +17,7 @@ export default class SaveFormContainer extends Component {
   
   handleSave = () => {
     alert('Success')
-    this.props.navigation.navigate('MainMenu')
+    this.props.navigation.navigate('Home')
   }
 
   onFinalizeCheck = () => {
@@ -25,25 +27,44 @@ export default class SaveFormContainer extends Component {
 
   render() {
     return (
-      <ScrollView style={{ flex: 1, padding: 10 }}>
+      <Container>
         <Card>
-          <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Please input form name</Text>
-          <TextInput
-            style={{borderColor: '#ddd', borderWidth: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 5, paddingRight: 5, marginBottom: 10}}
+          <Label>Please input form name</Label>
+          <Input
             onChangeText={(answer) => this.setState({answer})}
             value={this.state.answer}
           />
-          <View style={{ flexDirection: 'row' }}>
+          <CheckBoxWrapper>
             <CheckBox
               containerStyle={{ backgroundColor: '#fff', padding: 0, borderWidth: 0, marginLeft: 0, marginRight: 0, marginBottom: 10 }}
               checked={ this.state.finalize }
               onPress={ () => this.onFinalizeCheck() }
             />
-            <Text style={{ paddingTop: 7 }}>Mark form as finalize</Text>
-          </View>
-          <TouchableOpacity onPress={ () => this.handleSave() } style={{ width: '100%', padding: 10, backgroundColor: 'blue', alignItems: 'center', borderRadius: 5}}><Text style={{ color: '#fff', fontSize: 15}}>Save</Text></TouchableOpacity>
+            <CheckBoxLabel>Mark form as finalize</CheckBoxLabel>
+          </CheckBoxWrapper>
+          <TouchableOpacity onPress={ () => this.handleSave() } style={{ width: '100%', padding: 10, backgroundColor: '#008CBA', alignItems: 'center', borderRadius: 5}}><Text style={{ color: '#fff', fontSize: 15}}>Save</Text></TouchableOpacity>
         </Card>
-      </ScrollView>
+      </Container>
     );
   }
 }
+
+const Label = styled.Text`
+  font-weight: bold;
+  margin-bottom: 5px;
+`
+
+const Input = styled.TextInput`
+  border-color: #ddd;
+  border-width: 1px;
+  padding: 10px 5px;
+  margin-bottom: 10px;
+`
+
+const CheckBoxWrapper = styled.View`
+  flex-direction: row;
+`
+
+const CheckBoxLabel = styled.Text`
+  padding-top: 7px;
+`

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import LoginContainer from './src/containers/login'
-import RootStack from './src/navigation/AppNavigation'
+import RootStack from './src/config/Routes'
 
 export default class App extends Component {
   render() {

@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import { ScrollView, Text, FlatList, View, TouchableOpacity } from 'react-native'
-import Card from '../components/Card'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import React, { Component }   from 'react'
+import {  TouchableOpacity }  from 'react-native'
+import Icon                   from 'react-native-vector-icons/FontAwesome'
+import FormList               from '../../components/form/FormList'
+import Container              from '../../components/common/Container'
 
 export default class SubmitFormContainer extends Component {
   constructor(props) {
@@ -32,10 +33,10 @@ export default class SubmitFormContainer extends Component {
 
     if (formCount === 1) {
       alert('1 form is submitted')
-      this.props.navigation.navigate('MainMenu')
+      this.props.navigation.navigate('Home')
     } else {
       alert(formCount + ' forms are submitted')
-      this.props.navigation.navigate('MainMenu')
+      this.props.navigation.navigate('Home')
     }
   }
 
@@ -68,7 +69,7 @@ export default class SubmitFormContainer extends Component {
     ]
   }
 
-  onSwitchChange = (key) => {
+  onFormPress = (key) => {
     const selectedId = this.state.selectedFormId
     let valueCount = selectedId.length
 
@@ -87,29 +88,16 @@ export default class SubmitFormContainer extends Component {
 
   }
 
-  renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => this.onSwitchChange(item.id) }>
-      <Card style={{marginBottom: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-        <View>
-          <Text style={{ fontSize: 17, marginBottom: 5 }}>{ item.name }</Text>
-          <Text style={{ fontSize: 10 }}>{ item.created_at }</Text>
-        </View>
-        {
-          this.state.selectedFormId.includes(item.id) &&
-          <Icon name ='check-circle' color='#219724' size={30}/>
-        }
-      </Card>
-    </TouchableOpacity>
-  )
 
   render() {
     return (
-      <ScrollView style={{ flex: 1, padding: 10 }}>
-        <FlatList
-          data={ this.fakeData() }
-          renderItem={ this.renderItem }
+      <Container>
+        <FormList
+          dataSource={ this.fakeData() }
+          onPress={ (key) => this.onFormPress(key)}
+          selectedIds={ this.state.selectedFormId }
         />
-      </ScrollView>
+      </Container>
     );
   }
 }

@@ -11,8 +11,10 @@ export default class SaveFormContainer extends Component {
     super(props)
     this.state = {
       formName: '',
-      finalize: false
+      finalize: false,
+      form: props.navigation.getParam('form')
     }
+    alert(this.state.form)
   }
   
   handleSave = () => {

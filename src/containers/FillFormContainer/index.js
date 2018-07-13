@@ -1,31 +1,28 @@
 import React, { Component } from 'react'
 import FormList   from '../../components/form/FormList'
 import Container  from '../../components/common/Container'
+import Database from '../../config/Database'
+import _ from 'lodash'
 
 class FillFormContainer extends Component {
-  fakeData() {
-    return [
-      {
-        id: 1,
-        name: 'Student Survey',
-        created_at: 'a few moments ago'
-      },
-      {
-        id: 2,
-        name: 'Election Survey',
-        created_at: '1 hour ago'
-      }
-    ]
+  constructor(props) {
+    super(props)
+    this.state = {
+      forms: Database.objects('BlankForm')
+    }
   }
 
   onPress = (id) => {
     const { navigation } = this.props
-    navigation.navigate('FormBuilder', { 
+    const { forms }      = this.state
+    const form           = forms.filtered('id = $0', id)[0]
+    const questions      = JSON.parse(form.questions)
+    
+    navigation.navigate('FormBuilder', {
       id: id, 
-      isFirst: true, 
-      isLast: false, 
-      title: 'How helpful is your academic advisor?', 
-      hint: 'Description about academic advisor' 
+      form: JSON.stringify(form),
+      action: 'Create',
+      numberOfQuestions: _.size(questions)
     })
   }
 
@@ -33,7 +30,7 @@ class FillFormContainer extends Component {
     return (
       <Container>
         <FormList
-          dataSource={ this.fakeData() }
+          dataSource={ this.state.forms }
           onPress={ (id) => this.onPress(id) }
         />
       </Container>

@@ -5,7 +5,7 @@ import Card                 from '../../components/common/Card'
 
 class MainMenuContainer extends Component {
   componentDidMount() {
-     StatusBar.setBarStyle('light-content')
+    StatusBar.setBarStyle('light-content')
   }
 
   onPress = (screen) => {

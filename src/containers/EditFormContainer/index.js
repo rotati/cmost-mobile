@@ -1,32 +1,25 @@
 import React, { Component } from 'react'
-import FormList   from '../../components/form/FormList'
-import Container  from '../../components/common/Container'
+import { connect }          from 'react-redux'
+import FormList             from '../../components/form/FormList'
+import Container            from '../../components/common/Container'
 
 class EditFormContainer extends Component {
-  fakeData() {
-    return [
-      {
-        id: 1,
-        name: 'Student 1',
-        created_at: 'a few moments ago'
-      },
-      {
-        id: 2,
-        name: 'Student 2',
-        created_at: '1 hour ago'
-      }
-    ]
+  constructor(props) {
+    super(props)
+    this.state = {
+      responses: this.props.responses
+    }
   }
 
   onPress = (id) => {
     const { navigation } = this.props
+    const { responses }  = this.state
+    const response       = responses.filter((response) => response.id === id)[0]
+
     navigation.navigate('FormBuilder', { 
-      id: id, 
-      isFirst: true, 
-      isLast: false, 
-      title: 'How helpful is your academic advisor?',
-      hint: 'Description about academic advisor',
-      answer: 'He is very good advisor'
+      id: response.id,
+      action: 'Update',
+      formId: response.formId
     })
   }
 
@@ -34,7 +27,7 @@ class EditFormContainer extends Component {
     return (
       <Container>
         <FormList
-          dataSource={ this.fakeData() }
+          dataSource={ this.state.responses }
           onPress={ (id) => this.onPress(id) }
         />
       </Container>
@@ -42,4 +35,10 @@ class EditFormContainer extends Component {
   }
 }
 
-export default EditFormContainer
+const mapStateToProps = (state) => {
+  return {
+    responses: Object.values(state.responses.data)
+  }
+}
+
+export default connect(mapStateToProps, null)(EditFormContainer)

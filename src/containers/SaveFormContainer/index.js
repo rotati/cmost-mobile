@@ -5,26 +5,53 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { CheckBox } from 'react-native-elements'
 import Container from '../../components/common/Container'
 import styled from 'styled-components'
+import ResponseActions from '../../redux/ResponseReducer'
+import { connect }          from 'react-redux'
 
-export default class SaveFormContainer extends Component {
+class SaveFormContainer extends Component {
   constructor(props) {
     super(props)
+
+    const formId    = props.navigation.getParam('formId')
+    const response  = JSON.parse(props.navigation.getParam('response'))
+    const action    = props.navigation.getParam('action')
+
     this.state = {
-      formName: '',
-      finalize: false,
-      form: props.navigation.getParam('form')
+      formId: formId,
+      answers: response.answers,
+      name: response.name,
+      finalized: response.finalized || false,
+      id: response.id,
+      action: action
     }
-    alert(this.state.form)
   }
   
   handleSave = () => {
-    alert('Success')
+    const { id, formId, name, answers, finalized, action } = this.state
+    const currentTime = Date.now()
+
+    const formParams = {
+      id: id || currentTime,
+      name: name,
+      answers: JSON.stringify(answers),
+      formId: formId,
+      finalized: finalized,
+      submitted: false,
+      createdAt: currentTime,
+      updatedAt: currentTime
+    }
+
+    if(action === 'Create') {
+      this.props.createForm( formParams )
+    } else {
+      this.props.updateForm( formParams )
+    }
     this.props.navigation.navigate('Home')
   }
 
-  onFinalizeCheck = () => {
-    const { finalize } = this.state
-    this.setState({ finalize: !finalize })
+  onFinalizedCheck = () => {
+    const { finalized } = this.state
+    this.setState({ finalized: !finalized })
   }
 
   render() {
@@ -33,16 +60,17 @@ export default class SaveFormContainer extends Component {
         <Card>
           <Label>Please input form name</Label>
           <Input
-            onChangeText={(answer) => this.setState({answer})}
-            value={this.state.answer}
+            onChangeText={(name) => this.setState({ name }) }
+            value={ this.state.name }
+            underlineColorAndroid='transparent'
           />
           <CheckBoxWrapper>
             <CheckBox
               containerStyle={{ backgroundColor: '#fff', padding: 0, borderWidth: 0, marginLeft: 0, marginRight: 0, marginBottom: 10 }}
-              checked={ this.state.finalize }
-              onPress={ () => this.onFinalizeCheck() }
+              checked={ this.state.finalized }
+              onPress={ () => this.onFinalizedCheck() }
             />
-            <CheckBoxLabel>Mark form as finalize</CheckBoxLabel>
+            <CheckBoxLabel>Mark form as finalized</CheckBoxLabel>
           </CheckBoxWrapper>
           <TouchableOpacity onPress={ () => this.handleSave() } style={{ width: '100%', padding: 10, backgroundColor: '#008CBA', alignItems: 'center', borderRadius: 5}}><Text style={{ color: '#fff', fontSize: 15}}>Save</Text></TouchableOpacity>
         </Card>
@@ -70,3 +98,17 @@ const CheckBoxWrapper = styled.View`
 const CheckBoxLabel = styled.Text`
   padding-top: 7px;
 `
+
+const mapStateToProps = (state) => {
+  return {
+    forms: state.forms.data
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  createForm: (params) => dispatch(ResponseActions.createResponseRequest(params)),
+  updateForm: (params) => dispatch(ResponseActions.updateResponseRequest(params))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SaveFormContainer)

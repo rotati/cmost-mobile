@@ -2,10 +2,15 @@ import React, { Component } from 'react'
 import * as Components      from './components'
 import { StatusBar }        from 'react-native'
 import Card                 from '../../components/common/Card'
+import { connect }          from 'react-redux'
+import FormActions          from '../../redux/FormReducer'
+import ResponseActions      from '../../redux/ResponseReducer'
 
 class MainMenuContainer extends Component {
   componentDidMount() {
     StatusBar.setBarStyle('light-content')
+    this.props.fetchForms()
+    this.props.fetchResponses()
   }
 
   onPress = (screen) => {
@@ -28,4 +33,10 @@ class MainMenuContainer extends Component {
   }
 }
 
-export default MainMenuContainer
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  fetchForms: () => dispatch(FormActions.fetchFormsRequest()),
+  fetchResponses: () => dispatch(ResponseActions.fetchResponsesRequest()),
+})
+
+export default connect(null, mapDispatchToProps)(MainMenuContainer)

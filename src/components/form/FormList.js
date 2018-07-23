@@ -15,15 +15,15 @@ class FormList extends Component {
 
   _renderItem = ({ item }) => {
     const { onPress, selectedIds } = this.props
-    const { id, name, createdAt }  = item
-    const createdAtInWord          = moment(createdAt).fromNow()
+    const { id, name, updatedAt }  = item
+    const updatedAtInWord          = moment(updatedAt).fromNow()
 
     return (
       <TouchableOpacity onPress={ () => { if (onPress) onPress(id) } }>
         <Card style={{marginBottom: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
           <View>
             <Text style={{ fontSize: 17, marginBottom: 5 }}>{ name }</Text>
-            <Text style={{ fontSize: 10 }}>{ createdAtInWord }</Text>
+            <Text style={{ fontSize: 10 }}>{ updatedAtInWord }</Text>
           </View>
           {
             (selectedIds !== undefined && selectedIds.includes(id)) &&
@@ -35,7 +35,7 @@ class FormList extends Component {
   }
 
   render() {
-    const { dataSource } = this.props;
+    const { dataSource, selectedIds } = this.props;
 
     return (
       <FlatList
@@ -43,6 +43,7 @@ class FormList extends Component {
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
         showsVerticalScrollIndicator={false}
+        extraData={ selectedIds }
       />
     );
   }

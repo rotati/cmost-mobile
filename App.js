@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import RootStack from './src/config/Routes'
+import { Provider }         from 'react-redux'
+import RootStack            from './src/config/Routes'
+import configureStore       from './src/config/Store'
 
 export default class App extends Component {
   render() {
-    return <RootStack />
+    return (
+      <Provider store={ configureStore() }>
+        <RootStack />
+      </Provider>
+    )
   }
 }

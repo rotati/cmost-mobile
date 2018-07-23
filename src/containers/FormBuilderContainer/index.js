@@ -1,18 +1,39 @@
 import React, { Component } from 'react'
-import { ScrollView, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, TextInput, View, TouchableOpacity, Picker, StyleSheet, Modal, Platform } from 'react-native'
 import Card from '../../components/common/Card'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import _ from 'lodash'
+import ResponseActions from '../../redux/ResponseReducer'
+import FormActions from '../../redux/FormReducer'
+import { connect }          from 'react-redux'
+import Immutable from 'seamless-immutable'
+import FormPicker from '../../components/common/FormPicker'
+import TextField from '../../components/common/TextField'
+import Location from '../../components/common/Location'
+import Emotional from '../../components/common/Emotional'
 
-export default class DownloadFormContainer extends Component {
+class FormBuilderContainer extends Component {
   constructor(props) {
     super(props)
+    const formId    = props.navigation.getParam('formId')
+    const action    = props.navigation.getParam('action')
+    const form      = props.forms.filter((form) => form.id === formId)[0]
+    const id        = props.navigation.getParam('id')
+    const response  = Object.values(props.responses).filter((response) => response.id === id)[0]
+
     this.state = {
-      form: JSON.parse(props.navigation.getParam('form')),
-      action: props.navigation.getParam('action'),
-      numberOfQuestions: props.navigation.getParam('numberOfQuestions'),
-      currentQuestion: 0,
+      questions: form.questions,
+      form: form,
+      action: action,
+      currentPage: 0,
+      response: response || Immutable({ answers: {} }),
+      numberOfPages: _.size(form.questions),
+      modalVisible: false
     }
+  }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
   static navigationOptions = ({ navigation }) => ({ 
@@ -24,52 +45,87 @@ export default class DownloadFormContainer extends Component {
   })
   
   handleSave = () => {
-    this.props.navigation.navigate('SaveForm', { form: JSON.stringify(this.state.form) })
+    const { response, form, action } = this.state
+    this.props.navigation.navigate('SaveForm', { 
+      response: JSON.stringify(response),
+      formId: form.id,
+      action: action
+    })
   }
 
-  handleAnswerChange = (answer) => {
-    let { form, currentQuestion } = this.state
-    const questions = JSON.parse(form.questions)
-    questions[currentQuestion].value = answer
-    form.questions = JSON.stringify(questions)
-
-    this.setState({ form })
+  handleAnswerChange = (qId, answer) => {
+    const { response } = this.state
+    this.setState({ response: response.setIn(['answers', qId], answer) })
   }
 
   componentDidMount() {
     this.props.navigation.setParams({ onSave: this.handleSave })
   }
+
   render() {
-    const form = this.state.form
-    const question = JSON.parse(form.questions)[this.state.currentQuestion]
+    const { questions, currentPage, response } = this.state
+    const { answers } = response
+    const page        = questions[currentPage]
+    let renderQuestions = []
+
+    if (page.type === 'Question') {
+      question = page.data
+      if (question.type === 'text') {
+        renderQuestions = (<TextField
+          label={ question.title }
+          hint={ question.hint }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+          value={ answers[question.id] }
+        />)
+      } else if (question.type === 'location') {
+        renderQuestions = (<Location
+          label={ question.title }
+          hint={ question.hint }
+          coordinate={ answers[question.id] }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+        />)
+      } else if (question.type === 'emotional') {
+        renderQuestions = (<Emotional
+          label={ question.title }
+          hint={ question.hint }
+          value={ answers[question.id] }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }/>)
+      }
+    } else {
+      questionings = page.data
+      renderQuestions = _.map(questionings, (question) => {
+        if(question.type === 'text') {
+          return (<TextField
+            label={ question.title }
+            hint={ question.hint }
+            onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+            value={ answers[question.id] }
+            key={ question.id }
+          />)
+        }
+      })
+    }
+
 
     return (
       <View style={{flex: 1}}>
         <ScrollView style={{ flex: 1, padding: 10 }}>
           <Card>
-            <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>{ question.title }</Text>
-            { question.hint &&
-              <Text style={{ fontStyle: 'italic', marginBottom: 10 }}>{ question.hint }</Text>
+            { page.data.length > 1 &&
+              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 30 }}>{ page.name }</Text>
             }
-            <Text style={{ fontWeight: 'bold', marginTop: 20, marginBottom: 5 }}>Your Answer</Text>
-            <TextInput
-              style={{borderColor: '#ddd', borderWidth: 1, paddingTop: 10, paddingBottom: 10, paddingLeft: 5, paddingRight: 5, marginBottom: 20, height: 150}}
-              onChangeText={(answer) => this.handleAnswerChange(answer) }
-              value={ question.value }
-              multiline={true}
-              numberOfLines={10}
-            />
+            { renderQuestions }
           </Card>
         </ScrollView>
         {
-          this.state.currentQuestion !== 0 && 
-          <TouchableOpacity onPress={ () => this.setState({ currentQuestion: this.state.currentQuestion - 1 }) } style={{ width: 45, height: 45, borderRadius: 40, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, left: 20 }}>
+          this.state.currentPage !== 0 && 
+          <TouchableOpacity onPress={ () => this.setState({ currentPage: this.state.currentPage - 1 }) } style={{ width: 60, height: 60, borderRadius: 60, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, left: 20, elevation: 3 }}>
             <Icon name='chevron-left' color='#fff' size={20}/>
           </TouchableOpacity>
         }
         {
-          this.state.currentQuestion !== (this.state.numberOfQuestions - 1) &&
-          <TouchableOpacity onPress={ () => this.setState({ currentQuestion: this.state.currentQuestion + 1 }) } style={{ width: 45, height: 45, borderRadius: 40, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, right: 20 }}>
+          this.state.currentPage !== (this.state.numberOfPages - 1) &&
+          <TouchableOpacity onPress={ () => this.setState({ currentPage: this.state.currentPage + 1 }) } style={{ width: 60, height: 60, borderRadius: 60, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, right: 20, elevation: 3 }}>
             <Icon name='chevron-right' color='#fff' size={20} style={{ marginLeft: 5 }}/>
           </TouchableOpacity>
         }
@@ -77,3 +133,12 @@ export default class DownloadFormContainer extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    responses: state.responses.data,
+    forms: state.forms.data
+  }
+}
+
+export default connect(mapStateToProps, null)(FormBuilderContainer)

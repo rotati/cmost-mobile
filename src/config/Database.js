@@ -1,8 +1,8 @@
 import Realm from "realm";
 
-class BlankForm extends Realm.Object {}
-BlankForm.schema = {
-  name: "BlankForm",
+class Forms extends Realm.Object {}
+Forms.schema = {
+  name: "Forms",
   properties: {
     id: "string",
     name: "string",
@@ -12,17 +12,20 @@ BlankForm.schema = {
   }
 }
 
-class Form extends Realm.Object {}
-Form.schema = {
-  name: "Form",
+class Responses extends Realm.Object {}
+Responses.schema = {
+  name: "Responses",
+  primaryKey: 'id',
   properties: {
-    id: "string",
+    id: "int",
     name: "string",
-    blankFormId: "string",
-    questions: "string",
+    formId: "string",
+    answers: "string",
+    finalized: "bool",
+    submitted: "bool",
     createdAt: "int",
     updatedAt: "int"
   }
 }
 
-export default new Realm({ schema: [BlankForm, Form], schemaVersion: 1 })
+export default new Realm({ schema: [Responses, Forms], schemaVersion: 1 })

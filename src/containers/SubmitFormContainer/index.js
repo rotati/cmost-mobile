@@ -5,6 +5,7 @@ import Icon                   from 'react-native-vector-icons/FontAwesome'
 import FormList               from '../../components/form/FormList'
 import Container              from '../../components/common/Container'
 import SubmitResponseActions  from '../../redux/SubmitResponseReducer'
+import I18n                   from '../../I18n'
 
 import _ from 'lodash'
 
@@ -46,13 +47,8 @@ class SubmitFormContainer extends Component {
       this.props.submitResponse(responseId)
     })
 
-    if (formCount === 1) {
-      alert('1 form is submitted')
-      this.props.navigation.navigate('Home')
-    } else {
-      alert(formCount + ' forms are submitted')
-      this.props.navigation.navigate('Home')
-    }
+    alert(I18n.t('general.submitted', { count: formCount }))
+    this.props.navigation.navigate('Home')
   }
 
   componentDidMount() {

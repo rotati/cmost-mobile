@@ -6,6 +6,7 @@ import Container            from '../../components/common/Container'
 import { TouchableOpacity } from 'react-native'
 import DownloadFormActions  from '../../redux/DownloadFormReducer'
 import FormActions          from '../../redux/FormReducer'
+import I18n                 from '../../I18n'
 
 class DownloadFormContainer extends Component {
   constructor(props) {
@@ -23,6 +24,21 @@ class DownloadFormContainer extends Component {
       </TouchableOpacity>
     ),
   })
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+    if (params.showDeleteBtn) {
+      return { 
+        headerRight: (
+          <TouchableOpacity onPress={() => navigation.state.params.onSave() } >
+            <Icon name='save' size={25} color='#fff' style={{ marginRight: 15 }}/>
+          </TouchableOpacity>
+        )
+      }
+    } else {
+      return { headerRight: null }
+    }
+  }
   
   handleSave = () => {
     const { selectedFormId, forms } = this.state
@@ -33,16 +49,9 @@ class DownloadFormContainer extends Component {
       this.props.saveLocally(currentForm)
     })
 
+    alert(I18n.t('general.downloaded', { count: formCount }))
     this.props.fetchLocalForms()
-    if (formCount === 1) {
-      alert('1 form is downloaded')
-      this.props.navigation.navigate('Home')
-    } else if (formCount > 1) {
-      alert(formCount + ' forms are downloaded')
-      this.props.navigation.navigate('Home')
-    } else {
-      alert('No selected form')
-    }
+    this.props.navigation.navigate('Home')
   }
 
   componentDidMount() {
@@ -56,11 +65,19 @@ class DownloadFormContainer extends Component {
 
   onFormPress = (key) => {
     const selectedId = this.state.selectedFormId
+    let valueCount = selectedId.length
+
     if (selectedId.includes(key)) {
       this.setState({ selectedFormId: selectedId.filter((id) => id !== key) })
+      valueCount -= 1
     } else {
       this.setState({ selectedFormId: [...selectedId, key] })
+      valueCount += 1
     }
+
+    this.props.navigation.setParams({
+      showDeleteBtn: valueCount > 0
+    });
   }
 
   render() {

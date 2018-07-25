@@ -1,4 +1,5 @@
 import { StackNavigator } from 'react-navigation'
+import I18n               from '../I18n'
 
 import LoginScreen              from '../containers/LoginContainer'
 import HomeScreen               from '../containers/HomeContainer'
@@ -14,16 +15,16 @@ import SubmitFormScreen         from '../containers/SubmitFormContainer'
 
 const RootStack = StackNavigator({
   Login:         { screen: LoginScreen,         navigationOptions: { header: null } },
-  Home:          { screen: HomeScreen,          navigationOptions: { title: 'Home', headerLeft: null } },
-  SaveForm:      { screen: SaveFormScreen,      navigationOptions: { title: 'Save Form' } },
-  EditForm:      { screen: EditFormScreen,      navigationOptions: { title: 'Edit Form' } },
-  ViewForm:      { screen: ViewFormScreen,      navigationOptions: { title: 'View Forms' } },
-  DeleteForm:    { screen: DeleteFormScreen,    navigationOptions: { title: 'Delete Forms' } },
-  SubmitForm:    { screen: SubmitFormScreen,    navigationOptions: { title: 'Submit Forms' } },
-  FormBuilder:   { screen: FormBuilderScreen,   navigationOptions: { title: 'Question' } },
-  FillNewForm:   { screen: FillNewFormScreen,   navigationOptions: { title: 'New Form' } },
-  DownloadForm:  { screen: DownloadFormScreen,  navigationOptions: { title: 'Download Form' } },
-  DisplayAnswer: { screen: DisplayAnswerScreen, navigationOptions: { title: 'Answer' } },
-}, { initialRouteName: 'Home', navigationOptions: { headerTintColor: '#fff', headerStyle: { backgroundColor: '#2196F3' } }})
+  Home:          { screen: HomeScreen,          navigationOptions: { title: I18n.t('screenTitle.home'), headerLeft: null } },
+  SaveForm:      { screen: SaveFormScreen,      navigationOptions: { title: I18n.t('screenTitle.saveForm') } },
+  EditForm:      { screen: EditFormScreen,      navigationOptions: { title: I18n.t('screenTitle.editForm') } },
+  ViewForm:      { screen: ViewFormScreen,      navigationOptions: { title: I18n.t('screenTitle.viewForms') } },
+  DeleteForm:    { screen: DeleteFormScreen,    navigationOptions: { title: I18n.t('screenTitle.deleteForms') } },
+  SubmitForm:    { screen: SubmitFormScreen,    navigationOptions: { title: I18n.t('screenTitle.submitForms') } },
+  FormBuilder:   { screen: FormBuilderScreen,   navigationOptions: { title: I18n.t('screenTitle.question') } },
+  FillNewForm:   { screen: FillNewFormScreen,   navigationOptions: { title: I18n.t('screenTitle.newForm') } },
+  DownloadForm:  { screen: DownloadFormScreen,  navigationOptions: { title: I18n.t('screenTitle.downloadForm') } },
+  DisplayAnswer: { screen: DisplayAnswerScreen, navigationOptions: { title: I18n.t('screenTitle.answer') } },
+}, { initialRouteName: 'Home', navigationOptions: { headerTintColor: '#fff', headerStyle: { backgroundColor: '#3E72FF' } }})
 
-export default RootStack;
+export default RootStack

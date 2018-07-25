@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import { connect }          from 'react-redux'
 import Icon                 from 'react-native-vector-icons/FontAwesome'
 import FormList             from '../../components/form/FormList'
 import Container            from '../../components/common/Container'
-import { TouchableOpacity } from 'react-native'
+import I18n                 from '../../I18n'
 
-export default class DeleteFormContainer extends Component {
+import { TouchableOpacity, Alert } from 'react-native'
+
+class DeleteFormContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,42 +34,12 @@ export default class DeleteFormContainer extends Component {
     const { selectedFormId } = this.state
     const formCount = selectedFormId.length
 
-    if (formCount === 1) {
-      alert('1 form is deleted')
-      this.props.navigation.navigate('Home')
-    } else {
-      alert(formCount + ' forms are deleted')
-      this.props.navigation.navigate('Home')
-    }
+    alert(I18n.t('general.deleted', { count: formCount }))
+    this.props.navigation.navigate('Home')
   }
 
   componentDidMount() {
     this.props.navigation.setParams({ onSave: this.handleSave })
-  }
-
-  fakeData() {
-    return [
-      {
-        id: 1,
-        name: 'Student Survey',
-        created_at: 'a few moments ago'
-      },
-      {
-        id: 2,
-        name: 'Election Survey',
-        created_at: '1 hour ago'
-      },
-      {
-        id: 3,
-        name: 'Teaching Survey',
-        created_at: '9 hours ago'
-      },
-      {
-        id: 4,
-        name: 'Vihecle Survey',
-        created_at: 'Yesterday'
-      },
-    ]
   }
 
   onFormPress = (key) => {
@@ -81,18 +54,16 @@ export default class DeleteFormContainer extends Component {
       valueCount += 1
     }
 
-    
     this.props.navigation.setParams({
       showDeleteBtn: valueCount > 0
     });
-
   }
 
   render() {
     return (
       <Container>
         <FormList
-          dataSource={ this.fakeData() }
+          dataSource={ this.props.responses }
           onPress={ (key) => this.onFormPress(key)}
           selectedIds={ this.state.selectedFormId }
         />
@@ -100,3 +71,11 @@ export default class DeleteFormContainer extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    responses: Object.values(state.responses.data)
+  }
+}
+
+export default connect(mapStateToProps, null)(DeleteFormContainer)

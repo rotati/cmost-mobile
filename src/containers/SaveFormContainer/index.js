@@ -7,6 +7,7 @@ import Container from '../../components/common/Container'
 import styled from 'styled-components'
 import ResponseActions from '../../redux/ResponseReducer'
 import { connect }          from 'react-redux'
+import I18n from '../../I18n'
 
 class SaveFormContainer extends Component {
   constructor(props) {
@@ -58,7 +59,7 @@ class SaveFormContainer extends Component {
     return (
       <Container>
         <Card>
-          <Label>Please input form name</Label>
+          <Label>{ I18n.t('general.formName') }</Label>
           <Input
             onChangeText={(name) => this.setState({ name }) }
             value={ this.state.name }
@@ -70,9 +71,11 @@ class SaveFormContainer extends Component {
               checked={ this.state.finalized }
               onPress={ () => this.onFinalizedCheck() }
             />
-            <CheckBoxLabel>Mark form as finalized</CheckBoxLabel>
+            <CheckBoxLabel>{ I18n.t('general.finalized') }</CheckBoxLabel>
           </CheckBoxWrapper>
-          <TouchableOpacity onPress={ () => this.handleSave() } style={{ width: '100%', padding: 10, backgroundColor: '#008CBA', alignItems: 'center', borderRadius: 5}}><Text style={{ color: '#fff', fontSize: 15}}>Save</Text></TouchableOpacity>
+          <TouchableOpacity onPress={ () => this.handleSave() } style={{ width: '100%', padding: 10, backgroundColor: '#008CBA', alignItems: 'center', borderRadius: 5}}>
+            <Text style={{ color: '#fff', fontSize: 15}}>{ I18n.t('general.save') }</Text>
+          </TouchableOpacity>
         </Card>
       </Container>
     );

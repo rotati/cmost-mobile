@@ -4,42 +4,53 @@ import Card   from '../../components/common/Card'
 import Icon   from 'react-native-vector-icons/FontAwesome'
 import { Dimensions, TouchableOpacity } from 'react-native'
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   flex: 1;
   padding-top: 5;
   padding-left: 5;
+  justify-content: space-between;
 `
 
 export const Menu = styled(Card)`
-  width: ${Dimensions.get('window').width - 20};
+  width: ${(Dimensions.get('window').width - 30) /2};
   height: 100px;
   margin: 5px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${ props => props.background }
+  background-color: #fff
 `
 
 export const MenuTitle = styled.Text`
   font-size: 15;
   text-align: center;
-  color: #fff
+  color: ${ props => props.color }
+`
+export const MenuGroup = styled.View`
+  flex-direction: row;
 `
 
-export const DeleteFormWrapper = styled.View`
-  margin-bottom: 10px;
+export const LogoWrapper = styled.View`
+  align-items: center;
+  padding: 10px;
+  justify-content: center;
+  flex: 1;
+`
+
+export const MenuWrapper = styled.View`
+  margin-bottom: 20px;
 `
 
 export const MenuButton = ({ screen, icon, title, color, onPress }) => (
   <TouchableOpacity onPress={ () => onPress() }>
-    <Menu background={ color }>
+    <Menu>
       <Icon
         name={ icon }
         size={ 30 }
         style={{ marginBottom: 10 }}
-        color='#fff'
+        color={ color }
       />
-      <MenuTitle>{ title }</MenuTitle>
+      <MenuTitle color={ color } >{ title }</MenuTitle>
     </Menu>
   </TouchableOpacity>
 )

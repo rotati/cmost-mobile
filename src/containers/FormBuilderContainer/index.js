@@ -11,6 +11,7 @@ import FormPicker from '../../components/common/FormPicker'
 import TextField from '../../components/common/TextField'
 import Location from '../../components/common/Location'
 import Emotional from '../../components/common/Emotional'
+import Question from '../../components/question'
 
 class FormBuilderContainer extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class FormBuilderContainer extends Component {
       questions: form.questions,
       form: form,
       action: action,
-      currentPage: 0,
+      currentPage: 1,
       response: response || Immutable({ answers: {} }),
       numberOfPages: _.size(form.questions),
       modalVisible: false
@@ -70,42 +71,27 @@ class FormBuilderContainer extends Component {
 
     if (page.type === 'Question') {
       question = page.data
-      if (question.type === 'text') {
-        renderQuestions = (<TextField
-          label={ question.title }
-          hint={ question.hint }
-          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
-          value={ answers[question.id] }
-        />)
-      } else if (question.type === 'location') {
-        renderQuestions = (<Location
-          label={ question.title }
-          hint={ question.hint }
-          coordinate={ answers[question.id] }
-          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
-        />)
-      } else if (question.type === 'emotional') {
-        renderQuestions = (<Emotional
-          label={ question.title }
-          hint={ question.hint }
-          value={ answers[question.id] }
-          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }/>)
-      }
+      renderQuestions = (<Question
+        label={ question.title }
+        hint={ question.hint }
+        onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+        value={ answers[question.id] }
+        type={ question.type }
+        options={ question.options }
+      />)
     } else {
       questionings = page.data
       renderQuestions = _.map(questionings, (question) => {
-        if(question.type === 'text') {
-          return (<TextField
-            label={ question.title }
-            hint={ question.hint }
-            onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
-            value={ answers[question.id] }
-            key={ question.id }
-          />)
-        }
+        return (<Question
+          label={ question.title }
+          hint={ question.hint }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+          value={ answers[question.id] }
+          type={ question.type }
+          options={ question.options }
+        />)
       })
     }
-
 
     return (
       <View style={{flex: 1}}>
@@ -118,13 +104,13 @@ class FormBuilderContainer extends Component {
           </Card>
         </ScrollView>
         {
-          this.state.currentPage !== 0 && 
+          this.state.currentPage !== 1 && 
           <TouchableOpacity onPress={ () => this.setState({ currentPage: this.state.currentPage - 1 }) } style={{ width: 60, height: 60, borderRadius: 60, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, left: 20, elevation: 3 }}>
             <Icon name='chevron-left' color='#fff' size={20}/>
           </TouchableOpacity>
         }
         {
-          this.state.currentPage !== (this.state.numberOfPages - 1) &&
+          this.state.currentPage !== this.state.numberOfPages &&
           <TouchableOpacity onPress={ () => this.setState({ currentPage: this.state.currentPage + 1 }) } style={{ width: 60, height: 60, borderRadius: 60, backgroundColor: '#2196F3', alignItems: 'center', justifyContent: 'center', shadowOffset:{  width: 3,  height: 3 }, shadowColor: 'black', shadowOpacity: 0.3, position: 'absolute', bottom: 20, right: 20, elevation: 3 }}>
             <Icon name='chevron-right' color='#fff' size={20} style={{ marginLeft: 5 }}/>
           </TouchableOpacity>

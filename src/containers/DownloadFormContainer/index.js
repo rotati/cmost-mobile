@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
+import { connect }          from 'react-redux'
 import Icon                 from 'react-native-vector-icons/FontAwesome'
 import FormList             from '../../components/form/FormList'
 import Container            from '../../components/common/Container'
 import { TouchableOpacity } from 'react-native'
+import DownloadFormActions  from '../../redux/DownloadFormReducer'
+import FormActions          from '../../redux/FormReducer'
 
 class DownloadFormContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedFormId: []
+      selectedFormId: [],
+      forms: []
     }
   }
 
@@ -21,9 +25,15 @@ class DownloadFormContainer extends Component {
   })
   
   handleSave = () => {
-    const { selectedFormId } = this.state
+    const { selectedFormId, forms } = this.state
     const formCount = selectedFormId.length
 
+    selectedFormId.forEach((formId) => {
+      const currentForm = forms.filter((form) => form.id === formId)[0]
+      this.props.saveLocally(currentForm)
+    })
+
+    this.props.fetchLocalForms()
     if (formCount === 1) {
       alert('1 form is downloaded')
       this.props.navigation.navigate('Home')
@@ -37,31 +47,11 @@ class DownloadFormContainer extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({ onSave: this.handleSave })
+    this.props.fetchNewForms()
   }
 
-  fakeData() {
-    return [
-      {
-        id: 1,
-        name: 'Student Survey',
-        created_at: 'a few moments ago'
-      },
-      {
-        id: 2,
-        name: 'Election Survey',
-        created_at: '1 hour ago'
-      },
-      {
-        id: 3,
-        name: 'Teaching Survey',
-        created_at: '9 hours ago'
-      },
-      {
-        id: 4,
-        name: 'Vihecle Survey',
-        created_at: 'Yesterday'
-      },
-    ]
+  componentWillReceiveProps(nextProps) {
+    this.setState({ forms: nextProps.forms })
   }
 
   onFormPress = (key) => {
@@ -77,7 +67,7 @@ class DownloadFormContainer extends Component {
     return (
       <Container>
         <FormList
-          dataSource={ this.fakeData() }
+          dataSource={ this.state.forms }
           onPress={ (key) => this.onFormPress(key)}
           selectedIds={ this.state.selectedFormId }
         />
@@ -86,4 +76,15 @@ class DownloadFormContainer extends Component {
   }
 }
 
-export default DownloadFormContainer
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  fetchNewForms: () => dispatch(DownloadFormActions.downloadFormsRequest()),
+  saveLocally: (form) => dispatch(DownloadFormActions.saveFormLocalRequest(form)),
+  fetchLocalForms: (form) => dispatch(FormActions.fetchFormsRequest())
+})
+
+const mapStateToProps = (state) => ({
+  forms: state.downloadForms.data
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DownloadFormContainer)

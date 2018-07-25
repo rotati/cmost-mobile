@@ -22,7 +22,7 @@ const Input = styled.TextInput`
   margin-bottom: 10;
 `
 
-const TextField = ({ label, hint, value, onChange, placeholder, secureTextEntry }) => (
+const TextField = ({ label, hint, value, onChange, placeholder, secureTextEntry, number, multiline }) => (
   <View>
     <Label>{ label }</Label>
     { hint && <Hint>{ hint }</Hint> }
@@ -32,6 +32,8 @@ const TextField = ({ label, hint, value, onChange, placeholder, secureTextEntry 
       placeholder={ placeholder }
       secureTextEntry={ secureTextEntry }
       underlineColorAndroid='transparent'
+      keyboardType={ number ? 'numeric' : 'default' }
+      multiline={ multiline }
     />
   </View>
 )

@@ -34,7 +34,7 @@ class DeleteFormContainer extends Component {
     const { selectedFormId } = this.state
     const formCount = selectedFormId.length
 
-    alert(I18n.t('general.deleted', { count: formCount }))
+    Alert.alert(null, I18n.t('general.deleted', { count: formCount }), [{ text: I18n.t('general.ok') }])
     this.props.navigation.navigate('Home')
   }
 

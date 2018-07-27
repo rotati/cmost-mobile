@@ -1,7 +1,11 @@
 export default {
   general: {
+    restartMsg: "The app will be restarted",
+    ok: "OK",
+    cancel: "Cancel",
     save: "Save",
     formName: "Form Name",
+    newLanguage: "ភាសាខ្មែរ",
     finalized: "Mark form as finalized",
     submitted: {
       one: "1 form is submitted",

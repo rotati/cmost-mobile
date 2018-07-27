@@ -1,22 +1,68 @@
 import React, { Component } from 'react'
-import * as Components      from './components'
-import { StatusBar, Image } from 'react-native'
-import Card                 from '../../components/common/Card'
 import { connect }          from 'react-redux'
+import RNRestart            from 'react-native-restart'
+import * as Components      from './components'
+import Card                 from '../../components/common/Card'
 import FormActions          from '../../redux/FormReducer'
 import ResponseActions      from '../../redux/ResponseReducer'
 import I18n                 from '../../I18n'
 import CPPLogo              from '../../assets/images/cpp-logo.png'
+import Database             from '../../config/Database'
+
+import { StatusBar, Image, Alert } from 'react-native'
 
 class MainMenuContainer extends Component {
   componentDidMount() {
     StatusBar.setBarStyle('light-content')
+    this.props.navigation.setParams({ handleLanguageChange: this.handleLanguageChange })
     this.props.fetchForms()
     this.props.fetchResponses()
   }
 
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state
+
+    return { 
+      headerRight: (
+        <Components.LanguageWrapper onPress={ () => params.handleLanguageChange() }>
+          <Components.LanguageShortcut>{ I18n.t('general.newLanguage') }</Components.LanguageShortcut>
+        </Components.LanguageWrapper>
+      )
+    }
+  }
+
   onPress = (screen) => {
     this.props.navigation.navigate(screen)
+  }
+
+  handleLanguageChange = () => {
+    Alert.alert(
+      null,
+      I18n.t('general.restartMsg'),
+      [{ text: I18n.t('general.cancel') }, { text: I18n.t('general.ok'), onPress: () => this.handleRestart() }]
+    )
+  }
+
+  handleRestart = () => {
+    const currentLang = this.getCurrentLanguage()
+    const newLang = currentLang.value === 'en' ? 'kh' : 'en'
+
+    Database.write(() => {
+      currentLang.value = newLang
+    })
+
+    RNRestart.Restart()
+  }
+
+  getCurrentLanguage = () => {
+    const langSetting = Database.objects('Setting').filtered('key = $0', 'language')[0]
+    
+    if (langSetting === undefined) {
+      const newLangSetting = Database.create('Setting', { key: 'language', value: 'en' })
+      return newLangSetting
+    }
+
+    return langSetting
   }
 
   render() {

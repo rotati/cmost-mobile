@@ -1,6 +1,5 @@
 import React, { Component }   from 'react'
 import { connect }            from 'react-redux'
-import {  TouchableOpacity }  from 'react-native'
 import Icon                   from 'react-native-vector-icons/FontAwesome'
 import FormList               from '../../components/form/FormList'
 import Container              from '../../components/common/Container'
@@ -8,6 +7,7 @@ import SubmitResponseActions  from '../../redux/SubmitResponseReducer'
 import I18n                   from '../../I18n'
 
 import _ from 'lodash'
+import {  TouchableOpacity, Alert }  from 'react-native'
 
 class SubmitFormContainer extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class SubmitFormContainer extends Component {
       this.props.submitResponse(responseId)
     })
 
-    alert(I18n.t('general.submitted', { count: formCount }))
+    Alert.alert(null, I18n.t('general.submitted', { count: formCount }), [{ text: I18n.t('general.ok') }])
     this.props.navigation.navigate('Home')
   }
 

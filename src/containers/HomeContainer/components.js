@@ -41,6 +41,16 @@ export const MenuWrapper = styled.View`
   margin-bottom: 20px;
 `
 
+export const LanguageWrapper = styled.TouchableOpacity`
+  align-items: center;
+  margin-right: 10px;
+  padding: 5px;
+`
+export const LanguageShortcut = styled.Text`
+  font-size: 15px;
+  color: #fff;
+`
+
 export const MenuButton = ({ screen, icon, title, color, onPress }) => (
   <TouchableOpacity onPress={ () => onPress() }>
     <Menu>

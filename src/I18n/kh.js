@@ -1,7 +1,11 @@
 export default {
   general: {
+    restartMsg: "កម្មវិធីនឹងធ្វើការបើកម្តងទៀត",
+    ok: "យល់ព្រម",
+    cancel: "បោះបង់",
     save: "រក្សាទុក",
     formName: "ឆ្មោះរបស់ទម្រង់បែបបទ",
+    newLanguage: "English",
     finalized: "ចម្លើយសម្រេច",
     submitted: {
       one: "ទម្រង់បែបបទ ១ ត្រូវបានបញ្ចូន",

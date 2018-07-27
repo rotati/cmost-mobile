@@ -28,4 +28,13 @@ Responses.schema = {
   }
 }
 
-export default new Realm({ schema: [Responses, Forms], schemaVersion: 1 })
+class Setting extends Realm.Object {}
+Setting.schema = {
+  name: "Setting",
+  properties: {
+    key: "string",
+    value: "string"
+  }
+}
+
+export default new Realm({ schema: [Responses, Forms, Setting], schemaVersion: 1 })

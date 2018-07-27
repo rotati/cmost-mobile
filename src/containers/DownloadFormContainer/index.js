@@ -3,10 +3,11 @@ import { connect }          from 'react-redux'
 import Icon                 from 'react-native-vector-icons/FontAwesome'
 import FormList             from '../../components/form/FormList'
 import Container            from '../../components/common/Container'
-import { TouchableOpacity } from 'react-native'
 import DownloadFormActions  from '../../redux/DownloadFormReducer'
 import FormActions          from '../../redux/FormReducer'
 import I18n                 from '../../I18n'
+
+import { TouchableOpacity, Alert } from 'react-native'
 
 class DownloadFormContainer extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class DownloadFormContainer extends Component {
     if (params.showDeleteBtn) {
       return { 
         headerRight: (
-          <TouchableOpacity onPress={() => navigation.state.params.onSave() } >
+          <TouchableOpacity onPress={() => params.onSave() } >
             <Icon name='save' size={25} color='#fff' style={{ marginRight: 15 }}/>
           </TouchableOpacity>
         )
@@ -49,7 +50,7 @@ class DownloadFormContainer extends Component {
       this.props.saveLocally(currentForm)
     })
 
-    alert(I18n.t('general.downloaded', { count: formCount }))
+    Alert.alert(null, I18n.t('general.downloaded', { count: formCount }), [{ text: I18n.t('general.ok') }])
     this.props.fetchLocalForms()
     this.props.navigation.navigate('Home')
   }

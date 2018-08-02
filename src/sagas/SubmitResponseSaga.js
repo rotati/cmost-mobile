@@ -21,7 +21,7 @@ export function* submitResponse({ id }) {
   let answerAttr = {}
   _.forEach(_.flatten(questionIds), (qId) => {
     answerAttr[qId + '_1'] = {
-      value: answers[qId],
+      ...answers[qId],
       questioning_id: qId
     }
   })
@@ -33,7 +33,7 @@ export function* submitResponse({ id }) {
     answers_attributes: answerAttr
   }
 
-  const ENDPOINT = 'https://cmost.rotati.tech/api/v2/m/education/responses'
+  const ENDPOINT = 'https://cmost.rotati.tech/api/v2/m/demo/responses'
 
   try {
     axios.defaults.headers.common['Authorization'] = 'Token b6c5320797ce0404c5d4f8350b01e36b';

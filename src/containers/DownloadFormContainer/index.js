@@ -3,6 +3,7 @@ import { connect }          from 'react-redux'
 import Icon                 from 'react-native-vector-icons/FontAwesome'
 import FormList             from '../../components/form/FormList'
 import Container            from '../../components/common/Container'
+import Loading              from '../../components/common/Loading'
 import DownloadFormActions  from '../../redux/DownloadFormReducer'
 import FormActions          from '../../redux/FormReducer'
 import I18n                 from '../../I18n'
@@ -84,6 +85,7 @@ class DownloadFormContainer extends Component {
   render() {
     return (
       <Container>
+        { this.props.loading && <Loading/> }
         <FormList
           dataSource={ this.state.forms }
           onPress={ (key) => this.onFormPress(key)}
@@ -102,7 +104,8 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state) => ({
-  forms: state.downloadForms.data
+  forms: state.downloadForms.data,
+  loading: state.downloadForms.loading
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DownloadFormContainer)

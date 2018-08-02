@@ -44,7 +44,7 @@ class MainMenuContainer extends Component {
   }
 
   handleRestart = () => {
-    const currentLang = this.getCurrentLanguage()
+    const currentLang = Database.objects('Setting').filtered('key = $0', 'language')[0]
     const newLang = currentLang.value === 'en' ? 'kh' : 'en'
 
     Database.write(() => {
@@ -52,17 +52,6 @@ class MainMenuContainer extends Component {
     })
 
     RNRestart.Restart()
-  }
-
-  getCurrentLanguage = () => {
-    const langSetting = Database.objects('Setting').filtered('key = $0', 'language')[0]
-    
-    if (langSetting === undefined) {
-      const newLangSetting = Database.create('Setting', { key: 'language', value: 'en' })
-      return newLangSetting
-    }
-
-    return langSetting
   }
 
   render() {

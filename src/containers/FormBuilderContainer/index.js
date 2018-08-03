@@ -15,6 +15,7 @@ import FormPicker           from '../../components/common/FormPicker'
 import DateTimePicker       from '../../components/common/DateTimePicker'
 import DatePicker           from '../../components/common/DatePicker'
 import TimePicker           from '../../components/common/TimePicker'
+import MapSelect            from '../../components/common/MapSelect'
 import * as Components      from './components'
 
 import { Text, TouchableOpacity } from 'react-native'
@@ -104,16 +105,30 @@ class FormBuilderContainer extends Component {
           hint={ question.hint }
         />
       )
-      case 'select_one': return (
-        <FormPicker
-          key={ key } 
-          value={ answer.option_node_id }
-          label={ question.title }
-          onChange={ (answer) => this.handleAnswerChange(question.id, { option_node_id: answer }) }
-          hint={ question.hint }
-          options={ question.options }
-        />
-      )
+      case 'select_one':
+        if (question.options.geographic && question.options.allow_coordinates) {
+          return (
+            <MapSelect
+              key={ key }
+              markers={ question.options.data }
+              value={ answer.option_node_id }
+              label={ question.title }
+              hint={ question.hint }
+              onChange={ (answer) => this.handleAnswerChange(question.id, { option_node_id: answer }) }
+            />
+          )
+        } else {
+          return (
+            <FormPicker
+              key={ key } 
+              value={ answer.option_node_id }
+              label={ question.title }
+              onChange={ (answer) => this.handleAnswerChange(question.id, { option_node_id: answer }) }
+              hint={ question.hint }
+              options={ question.options.data }
+            />
+          )
+        }
       case 'long_text': return (
         <TextField
           key={ key } 

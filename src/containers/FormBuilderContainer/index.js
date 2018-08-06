@@ -72,9 +72,9 @@ class FormBuilderContainer extends Component {
   }
 
   renderQuestion = (question, key) => {
-    const { response } = this.state
-    const { answers }  = response
-     const answer      = answers[question.id] || {}
+    const { response, form } = this.state
+    const { answers }        = response
+     const answer            = answers[question.id] || {}
 
     switch(question.type) {
       case 'text': return (
@@ -114,6 +114,10 @@ class FormBuilderContainer extends Component {
               value={ answer.option_node_id }
               label={ question.title }
               hint={ question.hint }
+              formId={ form.id }
+              questionId={ question.id }
+              canChooseOnce={ question.choose_once }
+              responseId={ this.props.navigation.getParam('id') }
               onChange={ (answer) => this.handleAnswerChange(question.id, { option_node_id: answer }) }
             />
           )

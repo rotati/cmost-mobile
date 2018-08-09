@@ -1,15 +1,25 @@
-import React from 'react'
-import MapView, { Marker } from 'react-native-maps'
-import { StyleSheet, View, Dimensions, TouchableWithoutFeedback, Alert } from 'react-native'
-import styled   from 'styled-components'
-import MDIcon   from 'react-native-vector-icons/MaterialIcons'
-import _ from 'lodash'
-import Database from '../../config/Database'
+import React, { Component } from 'react'
+import MapView, { Marker }  from 'react-native-maps'
+import styled               from 'styled-components'
+import MDIcon               from 'react-native-vector-icons/MaterialIcons'
+import _                    from 'lodash'
+import axios                from 'axios'
+import Database             from '../../config/Database'
+import TextField            from './TextField'
+
+import { CREATE_OPTION_URL, API_KEY } from '../../constants/EndPoints'
+
+import {
+  View,
+  Dimensions,
+  Alert,
+  Modal
+} from 'react-native'
 
 const LATITUDE_DELTA = 0.01
 const LONGITUDE_DELTA = 0.01
 
-export default class MapSelect extends React.Component {
+export default class MapSelect extends Component {
   state = {
     region: {
       latitude: 11.5761,
@@ -17,12 +27,16 @@ export default class MapSelect extends React.Component {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     },
-    markers: this.props.markers,
-    selectedOptionIds: []
+    markers: this.props.options.data,
+    selectedOptionIds: [],
+    showNewLocationModal: false,
+    newLocationName: "",
+    newLocationCoords : {}
   }
 
   componentDidMount() {
-    const { formId, responseId, questionId, markers, value, canChooseOnce } = this.props
+    const { formId, responseId, questionId, options, value, canChooseOnce } = this.props
+    const markers = options.data
 
     // ----- Find Options which are already selected
     const relatedResponses  = Database.objects('Responses').filtered('formId = $0 AND id <> $1', formId, responseId)
@@ -72,7 +86,28 @@ export default class MapSelect extends React.Component {
       }
     })
   }
-  
+
+  onAddNewLocation = () => {
+    const { markers, newLocationName, newLocationCoords } = this.state
+    const { options }              = this.props
+    const { latitude, longitude }  = newLocationCoords
+    const isExistingPlace          = _.some(markers, { latitude, longitude })
+
+    if (!isExistingPlace) {
+      // axios.put(
+      //   CREATE_OPTION_URL(options.id),
+      //   { name: newLocationName, ...newLocationCoords },
+      //   { headers: { Authorization: "Token " + API_KEY } }
+      // ).then(result => {
+      // })
+      this.setState({ showNewLocationModal: false, newLocationName: '', newLocationCoords: {} })
+    }
+  }
+
+  onMapPress = (coordinate) => {
+    this.setState({ newLocationCoords: coordinate, showNewLocationModal: true })
+  }
+
   getCurrentPosition() {
     try {
       navigator.geolocation.getCurrentPosition(
@@ -125,8 +160,9 @@ export default class MapSelect extends React.Component {
           <Map
             region={region}
             onRegionChangeComplete={ (region) => this.setState({ region }) }
-            showsUserLocation={true}  
+            showsUserLocation={true}
             provider="google"
+            onPress={ (e) => this.onMapPress(e.nativeEvent.coordinate) }
           >
             { this.renderMarkers() }
           </Map>
@@ -138,6 +174,21 @@ export default class MapSelect extends React.Component {
             />
           </CurrentLocationButton>
         </MapWrapper>
+        
+        <Modal animationType="slide" transparent={ true } visible={ this.state.showNewLocationModal }>
+          <ModalContainer>
+            <FormWrapper>
+              <TextField
+                value={ this.state.newLocationName }
+                label='Name'
+                onChange={ (value) => this.setState({ newLocationName: value }) }
+              />
+              <Button onPress={ () => this.onAddNewLocation() }>
+                <ButtonTitle>Save</ButtonTitle>
+              </Button>
+            </FormWrapper>
+          </ModalContainer>
+        </Modal>
       </View>
     )
   }
@@ -178,4 +229,21 @@ const CurrentLocationButton = styled.TouchableOpacity`
   background-color: #fff;
   align-items: center;
   justify-content: center;
+`
+
+const ModalContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  padding: 10px;
+`
+
+const Button = styled.TouchableOpacity`
+`
+
+const ButtonTitle = styled.Text`
+`
+
+const FormWrapper = styled.View`
+  padding: 10px;
+  background-color: white;
 `

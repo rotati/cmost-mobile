@@ -7,7 +7,7 @@ import {
   View,
   Picker,
   TouchableOpacity
-} from "react-native";
+} from "react-native"
 
 export default class FormPicker extends Component {
   constructor(props) {

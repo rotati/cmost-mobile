@@ -110,7 +110,7 @@ class FormBuilderContainer extends Component {
           return (
             <MapSelect
               key={ key }
-              markers={ question.options.data }
+              options={ question.options }
               value={ answer.option_node_id }
               label={ question.title }
               hint={ question.hint }

@@ -1,18 +1,14 @@
 import { put, call }            from 'redux-saga/effects'
+import axios                    from 'axios'
 import { DownloadFormTypes }    from '../redux/DownloadFormReducer'
 import Database                 from '../config/Database'
-import axios                    from 'axios'
+import { DOWNLOAD_FORM_URL, API_KEY } from '../constants/EndPoints'
 
 export function* downloadForms() {
   const ENDPOINT = 'https://cmost.rotati.tech/api/v2/m/demo/forms'
-  // const ENDPOINT = 'http://192.168.0.129:3000/api/v2/m/education/forms'
   try {
-    //13f2cb87cac3be8486dd0ce8b680581d Local API KEY
-    //b6c5320797ce0404c5d4f8350b01e36b Staging API KEY
-    const result = yield call(axios.get, ENDPOINT, { headers: { 'Authorization': 'Token b6c5320797ce0404c5d4f8350b01e36b'} })
-
+    const result = yield call(axios.get, DOWNLOAD_FORM_URL, { headers: { 'Authorization': 'Token ' + API_KEY} })
     yield put({ type: DownloadFormTypes.DOWNLOAD_FORMS_SUCCESS, data: result.data })
-
   } catch(error) {
     yield put({ type: DownloadFormTypes.DOWNLOAD_FORMS_FAIL, error })
   }

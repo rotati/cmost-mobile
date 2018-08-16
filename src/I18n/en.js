@@ -18,7 +18,9 @@ export default {
     deleted: {
       one: "1 form is deleted",
       other: "{{count}} forms are deleted"
-    }
+    },
+    newLocation: "New Location",
+    name: "Name",
   },
   mainMenu: {
     downloadForm: "Download Form",

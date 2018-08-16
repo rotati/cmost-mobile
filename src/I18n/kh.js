@@ -18,7 +18,9 @@ export default {
     deleted: {
       one: "ទម្រង់បែបបទ ១ ត្រូវបានលុប",
       other: "ទម្រង់បែបបទ {{count}} ត្រូវបានលុប"
-    }
+    },
+    newLocation: "បង្កើតទីតាំងថ្មី",
+    name: "ឈ្មោះ",
   },
   mainMenu: {
     downloadForm: "ទាញយកទម្រង់បែបបទ",

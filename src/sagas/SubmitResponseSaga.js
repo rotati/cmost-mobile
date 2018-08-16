@@ -2,6 +2,7 @@ import { put, call }            from 'redux-saga/effects'
 import { SubmitResponseTypes }  from '../redux/SubmitResponseReducer'
 import Database                 from '../config/Database'
 import axios                    from 'axios'
+import { SUBMIT_FORM_URL, API_KEY } from '../constants/EndPoints'
 
 import _ from 'lodash'
 
@@ -33,11 +34,13 @@ export function* submitResponse({ id }) {
     answers_attributes: answerAttr
   }
 
-  const ENDPOINT = 'https://cmost.rotati.tech/api/v2/m/demo/responses'
-
   try {
-    axios.defaults.headers.common['Authorization'] = 'Token b6c5320797ce0404c5d4f8350b01e36b';
-    yield call(axios.post, ENDPOINT, { response: responseParams })
+    yield call(
+      axios.post, 
+      SUBMIT_FORM_URL, 
+      { response: responseParams }, 
+      { headers: { Authorization: "Token " + API_KEY } }
+    )
 
     Database.write(() => { response.submitted = true })
     yield put({ type: SubmitResponseTypes.SUBMIT_SUCCESS, id: id })

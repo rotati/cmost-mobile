@@ -6,10 +6,9 @@ import Card                 from '../../components/common/Card'
 import FormActions          from '../../redux/FormReducer'
 import ResponseActions      from '../../redux/ResponseReducer'
 import I18n                 from '../../I18n'
-import CPPLogo              from '../../assets/images/cpp-logo.png'
+import Logo                 from '../../assets/images/logo.png'
 import Database             from '../../config/Database'
-
-import { StatusBar, Image, Alert } from 'react-native'
+import { StatusBar, Alert } from 'react-native'
 
 class MainMenuContainer extends Component {
   componentDidMount() {
@@ -58,7 +57,7 @@ class MainMenuContainer extends Component {
     return (
       <Components.Container>
         <Components.LogoWrapper>
-          <Image source={ CPPLogo } />
+          <Components.Logo source={ Logo } />
         </Components.LogoWrapper>
         <Components.MenuWrapper>
           <Components.MenuGroup>

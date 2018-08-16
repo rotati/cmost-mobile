@@ -6,14 +6,15 @@ import _                    from 'lodash'
 import axios                from 'axios'
 import Database             from '../../config/Database'
 import TextField            from './TextField'
+import I18n from '../../I18n'
 
 import { CREATE_OPTION_URL, API_KEY } from '../../constants/EndPoints'
+import Modal from "react-native-modal"
 
 import {
   View,
   Dimensions,
-  Alert,
-  Modal
+  Alert, Text, TouchableOpacity
 } from 'react-native'
 
 const LATITUDE_DELTA = 0.01
@@ -88,24 +89,58 @@ export default class MapSelect extends Component {
   }
 
   onAddNewLocation = () => {
-    const { markers, newLocationName, newLocationCoords } = this.state
-    const { options }              = this.props
-    const { latitude, longitude }  = newLocationCoords
-    const isExistingPlace          = _.some(markers, { latitude, longitude })
+    const { newLocationName, newLocationCoords } = this.state
+    const { options } = this.props
 
-    if (!isExistingPlace) {
-      // axios.put(
-      //   CREATE_OPTION_URL(options.id),
-      //   { name: newLocationName, ...newLocationCoords },
-      //   { headers: { Authorization: "Token " + API_KEY } }
-      // ).then(result => {
-      // })
+    axios.put(
+      CREATE_OPTION_URL(options.id),
+      { name: newLocationName, ...newLocationCoords },
+      { headers: { Authorization: "Token " + API_KEY } }
+    ).then(result => {
+      this.addNewOptionToQuestion(result.data)
       this.setState({ showNewLocationModal: false, newLocationName: '', newLocationCoords: {} })
-    }
+    })
+  }
+
+  addNewOptionToQuestion = (option_node_id) => {
+    const { questionId, formId } = this.props
+    const { newLocationName, newLocationCoords } = this.state
+    const form         = Database.objects('Forms').filtered("id = $0", formId)[0]
+    const questionings = JSON.parse(form.questions)
+    let questionPath
+
+    const result = _.forEach(questionings, (questioning, index) => {
+      const type = questioning.type
+      if (type === 'Question') {
+        const question = questioning.data
+        if (question.id === questionId) questionPath = index + '.data'
+      } else {
+        _.forEach(questioning.data, (question, qIndex) => {
+          if (question.id === questionId) questionPath =  index + '.data.' + qIndex
+        })
+      }
+    })
+    const options = _.get(questionings, questionPath + '.options.data')
+    const newOption = { label: newLocationName, value: option_node_id, ...newLocationCoords }
+    _.set(questionings, questionPath + '.options.data', [...options, newOption])
+
+    Database.write(() => {
+      form.questions = JSON.stringify(questionings)
+    })
+
+    const oldMarkers = this.state.markers
+    this.setState({ markers: [...oldMarkers, newOption] })
   }
 
   onMapPress = (coordinate) => {
-    this.setState({ newLocationCoords: coordinate, showNewLocationModal: true })
+    const { markers, newLocationCoords } = this.state
+    const { options }                    = this.props
+    const { latitude, longitude }        = coordinate
+    const isExistingPlace                = _.some(markers, { latitude, longitude })
+
+    if (!isExistingPlace) {
+      this.setState({ newLocationCoords: coordinate, showNewLocationModal: true })
+    }
   }
 
   getCurrentPosition() {
@@ -124,9 +159,9 @@ export default class MapSelect extends Component {
   }
 
   renderMarkers = () => {
-    const { markers, value }    = this.props
-    const { selectedOptionIds } = this.state
-    let validMarkers            = []
+    const { value }  = this.props
+    let validMarkers = []
+    const { selectedOptionIds, markers } = this.state
 
     _.each(markers, (marker, index) => {
       if (!(marker.latitude && marker.longitude)) return
@@ -142,7 +177,6 @@ export default class MapSelect extends Component {
         />
       )
     })
-
     return validMarkers
   }
 
@@ -174,19 +208,25 @@ export default class MapSelect extends Component {
             />
           </CurrentLocationButton>
         </MapWrapper>
-        
-        <Modal animationType="slide" transparent={ true } visible={ this.state.showNewLocationModal }>
+
+        <Modal isVisible={this.state.showNewLocationModal}>
           <ModalContainer>
-            <FormWrapper>
+            <ModalContent>
+              <ModalTitle>{ I18n.t('general.newLocation') }</ModalTitle>
               <TextField
+                label={ I18n.t('general.name') }
                 value={ this.state.newLocationName }
-                label='Name'
                 onChange={ (value) => this.setState({ newLocationName: value }) }
               />
-              <Button onPress={ () => this.onAddNewLocation() }>
-                <ButtonTitle>Save</ButtonTitle>
-              </Button>
-            </FormWrapper>
+              <ModalAction>
+                <CancelButton onPress={ () => this.setState({ showNewLocationModal: false }) }>
+                  <ButtonText>{ I18n.t('general.cancel') }</ButtonText>
+                </CancelButton>
+                <SaveButton onPress={ () => this.onAddNewLocation() }>
+                  <ButtonText>{ I18n.t('general.save') }</ButtonText>
+                </SaveButton>
+              </ModalAction>
+            </ModalContent>
           </ModalContainer>
         </Modal>
       </View>
@@ -197,6 +237,7 @@ export default class MapSelect extends Component {
 const MapWrapper = styled.View`
   width: ${Dimensions.get('window').width - 40};
   height: ${Dimensions.get('window').width - 40};
+  margin-bottom: 20px;
 `
 
 const Map = styled(MapView)`
@@ -235,15 +276,50 @@ const ModalContainer = styled.View`
   flex: 1;
   justify-content: center;
   padding: 10px;
+  align-items: center;
 `
 
-const Button = styled.TouchableOpacity`
+const ModalContent = styled.View`
+  width: ${Dimensions.get('window').width - 20};
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
 `
 
-const ButtonTitle = styled.Text`
+const ModalTitle = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
 `
 
-const FormWrapper = styled.View`
+const SaveButton = styled.TouchableOpacity`
+  width: ${(Dimensions.get('window').width - 70) /2};
+  background-color: blue;
   padding: 10px;
-  background-color: white;
+  justify-content: center;
+  background-color: #008CBA;
+  align-items: center;
+  border-radius: 5px;
+`
+
+const CancelButton = styled.TouchableOpacity`
+  width: ${(Dimensions.get('window').width - 70) /2};
+  background-color: blue;
+  padding: 10px;
+  justify-content: center;
+  background-color: #008CBA;
+  align-items: center;
+  border-radius: 5px;
+`
+
+const ButtonText = styled.Text`
+  color: #fff;
+  font-weight: bold;
+`
+
+const ModalAction = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
 `

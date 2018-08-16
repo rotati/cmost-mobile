@@ -37,6 +37,11 @@ export const LogoWrapper = styled.View`
   flex: 1;
 `
 
+export const Logo = styled.Image`
+  width: 200px;
+  height: 200px;
+`
+
 export const MenuWrapper = styled.View`
   margin-bottom: 20px;
 `

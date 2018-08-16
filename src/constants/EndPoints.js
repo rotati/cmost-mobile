@@ -1,5 +1,5 @@
 export const BASE_URL = {
-  dev: "http://localhost:3000/api/v2/m/education/",
+  dev: "http://192.168.0.129:3000/api/v2/m/education/",
   staging: "https://cmost.rotati.tech/api/v2/m/demo/"
 }
 

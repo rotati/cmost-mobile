@@ -4,7 +4,7 @@ export default {
     ok: "យល់ព្រម",
     cancel: "បោះបង់",
     save: "រក្សាទុក",
-    formName: "ឆ្មោះរបស់ទម្រង់បែបបទ",
+    formName: "ឈ្មោះរបស់ទម្រង់បែបបទ",
     newLanguage: "English",
     finalized: "ចម្លើយសម្រេច",
     submitted: {

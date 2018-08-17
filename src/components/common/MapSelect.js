@@ -213,18 +213,19 @@ export default class MapSelect extends Component {
           <ModalContainer>
             <ModalContent>
               <ModalTitle>{ I18n.t('general.newLocation') }</ModalTitle>
+              <Divider />
               <TextField
                 label={ I18n.t('general.name') }
                 value={ this.state.newLocationName }
                 onChange={ (value) => this.setState({ newLocationName: value }) }
               />
               <ModalAction>
-                <CancelButton onPress={ () => this.setState({ showNewLocationModal: false }) }>
+                <ActionButton onPress={ () => this.setState({ showNewLocationModal: false }) }>
                   <ButtonText>{ I18n.t('general.cancel') }</ButtonText>
-                </CancelButton>
-                <SaveButton onPress={ () => this.onAddNewLocation() }>
+                </ActionButton>
+                <ActionButton onPress={ () => this.onAddNewLocation() }>
                   <ButtonText>{ I18n.t('general.save') }</ButtonText>
-                </SaveButton>
+                </ActionButton>
               </ModalAction>
             </ModalContent>
           </ModalContainer>
@@ -275,14 +276,13 @@ const CurrentLocationButton = styled.TouchableOpacity`
 const ModalContainer = styled.View`
   flex: 1;
   justify-content: center;
-  padding: 10px;
   align-items: center;
 `
 
 const ModalContent = styled.View`
   width: ${Dimensions.get('window').width - 20};
   background-color: #fff;
-  padding: 20px;
+  padding: 10px 15px 5px 15px;
   border-radius: 5px;
 `
 
@@ -290,23 +290,13 @@ const ModalTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
-const SaveButton = styled.TouchableOpacity`
+const ActionButton = styled.TouchableOpacity`
   width: ${(Dimensions.get('window').width - 70) /2};
   background-color: blue;
-  padding: 10px;
-  justify-content: center;
-  background-color: #008CBA;
-  align-items: center;
-  border-radius: 5px;
-`
-
-const CancelButton = styled.TouchableOpacity`
-  width: ${(Dimensions.get('window').width - 70) /2};
-  background-color: blue;
-  padding: 10px;
+  padding: 7px;
   justify-content: center;
   background-color: #008CBA;
   align-items: center;
@@ -321,5 +311,12 @@ const ButtonText = styled.Text`
 const ModalAction = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 20px;
+  margin: 10px 0px;
+`
+
+const Divider = styled.View`
+  background-color: #ddd;
+  width: 100%;
+  height: 1px;
+  margin-bottom: 10px;
 `

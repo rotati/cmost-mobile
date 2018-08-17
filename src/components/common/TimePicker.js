@@ -14,12 +14,12 @@ export default class TimePicker extends Component {
     this.state = {
       showTimeModal: false,
       time: {
-        "time_value(1i)": 1,
-        "time_value(2i)": 1,
-        "time_value(3i)": 1,
+        "time_value(1i)": "1",
+        "time_value(2i)": "1",
+        "time_value(3i)": "1",
         "time_value(4i)": time["time_value(4i)"],
         "time_value(5i)": time["time_value(5i)"],
-        "time_value(6i)": 0,
+        "time_value(6i)": "0",
       },
       showPlaceholder: _.isEmpty(time),
     }
@@ -27,12 +27,12 @@ export default class TimePicker extends Component {
 
   handleTimePicked = (time) => {
     const formattedTime = {
-      "time_value(1i)": 1,
-      "time_value(2i)": 1,
-      "time_value(3i)": 1,
+      "time_value(1i)": "1",
+      "time_value(2i)": "1",
+      "time_value(3i)": "1",
       "time_value(4i)": moment(time).format("kk"),
       "time_value(5i)": moment(time).format("mm"),
-      "time_value(6i)": 0,
+      "time_value(6i)": "0",
     }
 
     this.setState({ 

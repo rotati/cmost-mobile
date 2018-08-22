@@ -44,7 +44,8 @@ export default class MapSelect extends Component {
     const selectedOptionIds = canChooseOnce === false ? [] :
       _.map(relatedResponses, (response, index) => {
         const answers = JSON.parse(response.answers)
-        return answers[questionId].option_node_id
+        const answer  = answers[questionId] || {}
+        return answer.option_node_id
       })
 
     // ----- Initailize latitude and longitude

@@ -38,8 +38,8 @@ export const LogoWrapper = styled.View`
 `
 
 export const Logo = styled.Image`
-  width: 200px;
-  height: 200px;
+  width: ${ Dimensions.get('window').height - 440 };
+  height: ${ Dimensions.get('window').height - 440 };
 `
 
 export const MenuWrapper = styled.View`

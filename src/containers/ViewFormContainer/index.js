@@ -1,33 +1,27 @@
 import React, { Component } from 'react'
-import FormList   from '../../components/form/FormList'
-import Container  from '../../components/common/Container'
+import { connect }          from 'react-redux'
+import { pickBy }           from 'lodash'
+import FormList             from '../../components/form/FormList'
+import Container            from '../../components/common/Container'
+import ResponseActions      from '../../redux/ResponseReducer'
 
 class ViewFormContainer extends Component {
-  fakeData() {
-    return [
-      {
-        id: 1,
-        name: 'Student 1',
-        created_at: 'a few moments ago'
-      },
-      {
-        id: 2,
-        name: 'Student 2',
-        created_at: '1 hour ago'
-      }
-    ]
+  componentDidMount() {
+    this.props.fetchResponses()
   }
 
   onPress = (id) => {
-    const { navigation } = this.props
-    navigation.navigate('DisplayAnswer', { id: id })
+    const { navigation, responses } = this.props
+    const formId = responses[id].formId
+
+    navigation.navigate('DisplayAnswer', { id, formId })
   }
 
   render() {
     return (
       <Container>
         <FormList
-          dataSource={ this.fakeData() }
+          dataSource={ Object.values(this.props.responses) }
           onPress={ (id) => this.onPress(id) }
         />
       </Container>
@@ -35,4 +29,15 @@ class ViewFormContainer extends Component {
   }
 }
 
-export default ViewFormContainer
+const submittedResponses = (responses) => pickBy(responses, (response, key) => response.submitted)
+
+const mapStateToProps = (state) => ({
+  responses: submittedResponses(state.responses.data)
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+  fetchResponses: () => dispatch(ResponseActions.fetchResponsesRequest()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewFormContainer)

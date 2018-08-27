@@ -1,32 +1,126 @@
-import React, { Component } from 'react'
-import { ScrollView, Text, View } from 'react-native'
-import Card from '../../components/common/Card'
+import React, { Component }      from 'react'
+import { connect }               from 'react-redux'
+import { View }                  from 'react-native'
+import { isEmpty, map, forEach } from 'lodash'
+import styled                    from 'styled-components'
+import moment                    from 'moment'
+import FormActions               from '../../redux/FormReducer'
+import Card                      from '../../components/common/Card'
+import Container                 from '../../components/common/Container'
 
-export default class AnswerDetailContainer extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      title: this.props.navigation.getParam('title'),
-      hint: this.props.navigation.getParam('hint'),
-      answer: this.props.navigation.getParam('answer') || '',
-      isFirst: this.props.navigation.getParam('isFirst'),
-      isLast: this.props.navigation.getParam('isLast')
+class AnswerDetailContainer extends Component {
+  state = {
+    answers: {},
+    questions: {}
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (isEmpty(nextProps.forms)) return
+
+    const formId       = nextProps.navigation.getParam('formId')
+    const form         = nextProps.forms.filter((form) => form.id === formId)[0]
+    const questionings = form.questions
+    this.setState({ questionings })
+  }
+
+  componentDidMount() {
+    const { responses, navigation } = this.props
+    const id      = navigation.getParam('id')
+    const answers = responses[id].answers
+
+    this.setState({ answers })
+    this.props.fetchForms()
+  }
+
+  renderResponse = () => {
+    const { questionings, answers } = this.state
+    let questions = []
+
+    forEach(questionings, (questioning, index) => {
+      if (questioning.type === 'Question') {
+        const question = questioning.data
+        const answer   = answers[question.id]
+        const questionView = this.renderQuestion(question, answer)
+
+        questions.push(questionView)
+      } else {
+        const questionsGroup = questioning.data
+        const questionsView  = map(questionsGroup, (question, index) => {
+          const answer = answers[question.id]
+          this.renderQuestion(question, answer)
+        })
+
+        questions.push(questionsView)
+      }
+    })
+
+    return questions
+  }
+
+  renderQuestion = (question, answer) => (
+    <View key={ question.id }>
+      <Question>{ question.title }</Question>
+      <Answer>{ this.castAnswer(question, answer) }</Answer>
+    </View>
+  )
+
+  castAnswer = (question, answer) => {
+    switch(question.type) {
+      case 'select_one':
+        const options        = Object.values(question.options.data)
+        const selectedOption = options.filter(option => option.value === answer.option_node_id)[0]
+        return selectedOption.label
+      
+      case 'datetime':
+        const dateTime =  answer["datetime_value(1i)"] + ' ' + 
+                          answer["datetime_value(2i)"] + ' ' +
+                          answer["datetime_value(3i)"] + ' ' +
+                          answer["datetime_value(4i)"] + ':' +
+                          answer["datetime_value(5i)"]
+        return moment(dateTime, 'YYYY MM DD kk:mm').format('MMM DD, YYYY hh:mm A')
+      
+      case 'date':
+        const date =  answer["date_value(1i)"] + ' ' +
+                      answer["date_value(2i)"] + ' ' +
+                      answer["date_value(3i)"]
+        return moment(date, 'YYYY MM DD').format('MMM DD, YYYY')
+      
+      case 'time':
+        const time = answer["time_value(4i)"] + ':' + answer["time_value(5i)"]
+        return moment(time, 'kk:mm').format('hh:mm A')
+      
+      default: return answer.value
     }
   }
 
   render() {
     return (
-      <View style={{flex: 1}}>
-        <ScrollView style={{ flex: 1, padding: 10 }}>
-          <Card>
-            <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>How helpful is your academic advisor?</Text>
-            <Text style={{ fontStyle: 'italic', marginBottom: 20 }}>He is very good</Text>
-
-            <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>How well-maintained are the facilities at this university?</Text>
-            <Text style={{ fontStyle: 'italic', marginBottom: 20 }}>Very good</Text>
-          </Card>
-        </ScrollView>
-      </View>
-    );
+      <Container>
+        <Card>
+          { this.renderResponse() }
+        </Card>
+      </Container>
+    )
   }
 }
+
+const Question = styled.Text`
+  font-weight: bold;
+  margin-bottom: 5px;
+`
+
+const Answer = styled.Text`
+  font-style: italic;
+  margin-bottom: 20px;
+`
+
+const mapStateToProps = (state) => ({
+  responses: state.responses.data,
+  forms: state.forms.data
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchForms: () => dispatch(FormActions.fetchFormsRequest()),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AnswerDetailContainer)

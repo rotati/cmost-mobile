@@ -1,4 +1,4 @@
-import { StackNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 import I18n               from '../I18n'
 
 import LoginScreen              from '../containers/LoginContainer'
@@ -13,7 +13,7 @@ import ViewFormScreen           from '../containers/ViewFormContainer'
 import DisplayAnswerScreen      from '../containers/DisplayAnswerContainer'
 import SubmitFormScreen         from '../containers/SubmitFormContainer'
 
-const RootStack = StackNavigator({
+const RootStack = createStackNavigator({
   Login:         { screen: LoginScreen,         navigationOptions: { header: null } },
   Home:          { screen: HomeScreen,          navigationOptions: { title: I18n.t('screenTitle.home'), headerLeft: null } },
   SaveForm:      { screen: SaveFormScreen,      navigationOptions: { title: I18n.t('screenTitle.saveForm') } },

@@ -47,7 +47,7 @@ class AnswerDetailContainer extends Component {
         const questionsGroup = questioning.data
         const questionsView  = map(questionsGroup, (question, index) => {
           const answer = answers[question.id]
-          this.renderQuestion(question, answer)
+          return this.renderQuestion(question, answer)
         })
 
         questions.push(questionsView)
@@ -65,6 +65,8 @@ class AnswerDetailContainer extends Component {
   )
 
   castAnswer = (question, answer) => {
+    if (!answer) return ''
+
     switch(question.type) {
       case 'select_one':
         const options        = Object.values(question.options.data)
@@ -96,13 +98,19 @@ class AnswerDetailContainer extends Component {
   render() {
     return (
       <Container>
-        <Card>
-          { this.renderResponse() }
-        </Card>
+        <ScrollView>
+          <Card>
+            { this.renderResponse() }
+          </Card>
+          </ScrollView>
       </Container>
     )
   }
 }
+
+const ScrollView = styled.ScrollView`
+  flex: 1;
+`
 
 const Question = styled.Text`
   font-weight: bold;

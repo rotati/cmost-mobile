@@ -17,6 +17,8 @@ const { Types, Creators } = createActions({
   updateResponseSuccess: ['data'],
   updateResponseFail:    ['error'],
 
+  removeResponses: ['ids'],
+
   fetchResponsesRequest: null,
   fetchResponsesSuccess: ['data'],
   fetchResponsesFail:    ['error'],
@@ -64,6 +66,8 @@ export const fetchResponsesFail   = (state, { error }) => (
        .set('success', false)
 )
 
+export const removeResponses  = (state, { ids }) => ( state.set('data', state.data.without(ids)) )
+
 export const ResponseReducer = createReducer(InitailState, {
   [Types.CREATE_RESPONSE_REQUEST]: createResponseRequest,
   [Types.CREATE_RESPONSE_SUCCESS]: createResponseSuccess,
@@ -72,6 +76,8 @@ export const ResponseReducer = createReducer(InitailState, {
   [Types.UPDATE_RESPONSE_REQUEST]: updateResponseRequest,
   [Types.UPDATE_RESPONSE_SUCCESS]: updateResponseSuccess,
   [Types.UPDATE_RESPONSE_FAIL]:    updateResponseFail,
+
+  [Types.REMOVE_RESPONSES]:        removeResponses,
 
   [Types.FETCH_RESPONSES_REQUEST]: fetchResponsesRequest,
   [Types.FETCH_RESPONSES_SUCCESS]: fetchResponsesSuccess,

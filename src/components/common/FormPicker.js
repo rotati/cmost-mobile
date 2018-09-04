@@ -29,18 +29,18 @@ export default class FormPicker extends Component {
   render() {
     if (Platform.OS === "android") {
       return (
-        <View>
+        <Wrapper>
           <Label>{ this.props.label }</Label>
           { this.props.hint && <Hint>{ this.props.hint }</Hint> }
           <AndroidPickerWrapper>{ this.renderPicker(this.props) }</AndroidPickerWrapper>
-        </View>
+        </Wrapper>
       );
     } else {
       const selectedItem = this.props.options.find(i => i.value === this.props.value)
       const selectedLabel = selectedItem ? selectedItem.label : "";
 
       return (
-        <View>
+        <Wrapper>
           <Label>{ this.props.label }</Label>
           { this.props.hint && <Hint>{ this.props.hint }</Hint> }
           <InputContainer>
@@ -72,7 +72,7 @@ export default class FormPicker extends Component {
               </TouchableWithoutFeedback>
             </Modal>
           </InputContainer>
-        </View>
+        </Wrapper>
       )
     }
   }
@@ -119,4 +119,8 @@ const Hint = styled.Text`
 const AndroidPickerWrapper = styled.View`
   border-width: 1px;
   border-color: #ddd;
+`
+
+const Wrapper = styled.View`
+  margin-bottom: 10px;
 `

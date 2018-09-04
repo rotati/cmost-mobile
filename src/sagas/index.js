@@ -15,8 +15,11 @@ export default function* root() {
     takeLatest(ResponseTypes.FETCH_RESPONSES_REQUEST, fetchResponses),
     takeLatest(ResponseTypes.CREATE_RESPONSE_REQUEST, createResponse),
     takeLatest(ResponseTypes.UPDATE_RESPONSE_REQUEST, updateResponse),
+
     takeLatest(FormTypes.FETCH_FORMS_REQUEST, fetchForms),
+
     takeEvery(SubmitResponseTypes.REQUEST_SUBMIT, submitResponse),
+
     takeLatest(DownloadFormTypes.DOWNLOAD_FORMS_REQUEST, downloadForms),
     takeEvery(DownloadFormTypes.SAVE_FORM_LOCAL_REQUEST, saveLocally)
   ])

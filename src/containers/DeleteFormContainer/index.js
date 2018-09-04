@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect }          from 'react-redux'
 import Icon                 from 'react-native-vector-icons/FontAwesome'
+import ResponseActions      from '../../redux/ResponseReducer'
 import FormList             from '../../components/form/FormList'
 import Container            from '../../components/common/Container'
+import Database             from '../../config/Database'
 import I18n                 from '../../I18n'
 
 import { TouchableOpacity, Alert } from 'react-native'
@@ -34,7 +36,15 @@ class DeleteFormContainer extends Component {
     const { selectedFormId } = this.state
     const formCount = selectedFormId.length
 
+    Database.write(() => {
+      const query     = selectedFormId.map((_id, index) => `id = $${index}`).join(' OR ')
+      const responses = Database.objects('Responses').filtered(query, ...selectedFormId)
+
+      Database.delete(responses)
+    })
+
     Alert.alert(null, I18n.t('general.deleted', { count: formCount }), [{ text: I18n.t('general.ok') }])
+    this.props.removeResponses(selectedFormId)
     this.props.navigation.navigate('Home')
   }
 
@@ -72,10 +82,12 @@ class DeleteFormContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    responses: Object.values(state.responses.data)
-  }
-}
+const mapStateToProps = (state) => ({
+  responses: Object.values(state.responses.data)
+})
 
-export default connect(mapStateToProps, null)(DeleteFormContainer)
+const mapDispatchToProps = (dispatch) => ({
+  removeResponses: (ids) => dispatch(ResponseActions.removeResponses(ids))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteFormContainer)

@@ -14,7 +14,7 @@ export const QuestionWrapper = styled.ScrollView`
 export const GroupTitle = styled.Text`
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `
 
 export const PageIndicator = styled.TouchableOpacity`
@@ -41,7 +41,7 @@ export const PreviousPageButton = styled(PageIndicator)`
 
 export const QuestionPage = ({ isGroup, groupTitle, children }) => (
   <Card>
-    { isGroup && <GroupTitle>{ groupTitle }</GroupTitle> }
+    { isGroup && groupTitle && <GroupTitle>{ groupTitle }</GroupTitle> }
     { children }
   </Card>
 )

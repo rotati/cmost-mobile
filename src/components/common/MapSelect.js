@@ -35,6 +35,42 @@ export default class MapSelect extends Component {
     newLocationCoords : {}
   }
 
+  // componentDidMount() {
+  //   const { formId, responseId, questionId, options, value, canChooseOnce } = this.props
+  //   const markers = options.data
+
+  //   // ----- Find Options which are already selected
+  //   const relatedResponses  = Database.objects('Responses').filtered('formId = $0 AND id <> $1', formId, responseId)
+  //   const selectedOptionIds = canChooseOnce === false ? [] :
+  //     _.map(relatedResponses, (response, index) => {
+  //       const answers = JSON.parse(response.answers)
+  //       const answer  = answers[questionId] || {}
+  //       return answer.option_node_id
+  //     })
+
+  //   // ----- Initailize latitude and longitude
+  //   const selectedMarker    = _.filter(markers, marker => marker.value === value)
+  //   const availableMarkers  = _.filter(markers, marker => {
+  //     return !_.includes(selectedOptionIds, marker.value)
+  //   })
+
+  //   const currentMarker     = value === undefined ?
+  //     availableMarkers[0] || markers[0] : selectedMarker[0]
+
+  //   const latitude          = currentMarker.latitude
+  //   const longitude         = currentMarker.longitude
+
+  //   this.setState({ 
+  //     selectedOptionIds,
+  //     region: {
+  //       latitude,
+  //       longitude,
+  //       latitudeDelta: LATITUDE_DELTA,
+  //       longitudeDelta: LONGITUDE_DELTA
+  //     }
+  //   })
+  // }
+
   componentDidMount() {
     const { formId, responseId, questionId, options, value, canChooseOnce } = this.props
     const markers = options.data
@@ -47,28 +83,19 @@ export default class MapSelect extends Component {
         const answer  = answers[questionId] || {}
         return answer.option_node_id
       })
+    this.setState({ selectedOptionIds })
 
     // ----- Initailize latitude and longitude
     const selectedMarker    = _.filter(markers, marker => marker.value === value)
-    const availableMarkers  = _.filter(markers, marker => {
-      return !_.includes(selectedOptionIds, marker.value)
-    })
 
-    const currentMarker     = value === undefined ?
-      availableMarkers[0] || markers[0] : selectedMarker[0]
+    if (value === undefined) {
+      this.getCurrentPosition()
+    } else {
+      const latitude  = selectedMarker[0].latitude
+      const longitude = selectedMarker[0].longitude
+      this.setRegion({ longitude, latitude })
+    }
 
-    const latitude          = currentMarker.latitude
-    const longitude         = currentMarker.longitude
-
-    this.setState({ 
-      selectedOptionIds,
-      region: {
-        latitude,
-        longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      }
-    })
   }
 
   onLocationSelect = (marker) => {

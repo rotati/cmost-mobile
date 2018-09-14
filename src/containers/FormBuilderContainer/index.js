@@ -16,6 +16,7 @@ import DateTimePicker       from '../../components/common/DateTimePicker'
 import DatePicker           from '../../components/common/DatePicker'
 import TimePicker           from '../../components/common/TimePicker'
 import MapSelect            from '../../components/common/MapSelect'
+import MultipleSelect       from '../../components/common/MultipleSelect'
 import * as Components      from './components'
 
 import { Text, TouchableOpacity } from 'react-native'
@@ -177,6 +178,16 @@ class FormBuilderContainer extends Component {
           hint={ question.hint }
           onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
           value={ answer }
+        />
+      )
+      case 'select_multiple': return (
+        <MultipleSelect
+          key={ key }
+          label={ question.title }
+          hint={ question.hint }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+          value={ answer }
+          options={ question.options.data }
         />
       )
 

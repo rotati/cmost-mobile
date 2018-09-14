@@ -71,7 +71,7 @@ class AnswerDetailContainer extends Component {
       case 'select_one':
         const options        = Object.values(question.options.data)
         const selectedOption = options.filter(option => option.value === answer.option_node_id)[0]
-        return selectedOption.label
+        return selectedOption ? selectedOption.label : ''
       
       case 'datetime':
         const dateTime =  answer["datetime_value(1i)"] + ' ' + 

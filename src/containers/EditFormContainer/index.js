@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect }          from 'react-redux'
+import FormActions          from '../../redux/FormReducer'
 import FormList             from '../../components/form/FormList'
 import Container            from '../../components/common/Container'
 
@@ -9,6 +10,10 @@ class EditFormContainer extends Component {
     this.state = {
       responses: this.props.responses
     }
+  }
+
+  componentDidMount() {
+    this.props.fetchForms()
   }
 
   onPress = (id) => {
@@ -35,10 +40,12 @@ class EditFormContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    responses: Object.values(state.responses.data)
-  }
-}
+const mapStateToProps = (state) => ({
+  responses: Object.values(state.responses.data)
+})
 
-export default connect(mapStateToProps, null)(EditFormContainer)
+const mapDispatchToProps = (dispatch) => ({
+  fetchForms: () => dispatch(FormActions.fetchFormsRequest())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditFormContainer)

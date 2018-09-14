@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation'
-import I18n               from '../I18n'
+import I18n                     from '../I18n'
 
 import LoginScreen              from '../containers/LoginContainer'
 import HomeScreen               from '../containers/HomeContainer'

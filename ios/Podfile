@@ -38,6 +38,7 @@ target 'cmostMobile' do
   pod 'GoogleMaps'  # Remove this line if you don't want to support GoogleMaps on iOS
   pod 'Google-Maps-iOS-Utils' # Remove this line if you don't want to support GoogleMaps on iOS
   pod 'RNI18n', :path => '../node_modules/react-native-i18n'
+  pod 'react-native-camera', path: '../node_modules/react-native-camera'
 
 end
 

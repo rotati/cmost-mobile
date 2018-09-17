@@ -70,7 +70,21 @@
 	<false/>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>CMOST needs Location access for rendering a few type of question!</string>
+
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>CMOST needs Location access for rendering a few type of question!</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>CMOST needs Camera access for capturing photo and recording video.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>CMOST needs camera roll access for uploading photo or video.</string>
+
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>CMOST needs camera roll access for uploading photo or video.</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>CMOST needs microphone access for video recording</string>
+
 </dict>
 </plist>

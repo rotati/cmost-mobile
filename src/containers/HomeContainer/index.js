@@ -10,6 +10,8 @@ import Logo                 from '../../assets/images/logo.png'
 import Database             from '../../config/Database'
 import { StatusBar, Alert } from 'react-native'
 
+import Camera from '../../components/common/Camera'
+
 class MainMenuContainer extends Component {
   componentDidMount() {
     StatusBar.setBarStyle('light-content')
@@ -55,25 +57,7 @@ class MainMenuContainer extends Component {
 
   render() {
     return (
-      <Components.Container>
-        <Components.LogoWrapper>
-          <Components.Logo source={ Logo } />
-        </Components.LogoWrapper>
-        <Components.MenuWrapper>
-          <Components.MenuGroup>
-            <Components.MenuButton  icon='download' title={ I18n.t('mainMenu.downloadForm') }    color='#23408F' onPress={ () => this.onPress('DownloadForm') } />
-            <Components.MenuButton  icon='plus'     title={ I18n.t('mainMenu.fillNewForm') }     color='#23408F' onPress={ () => this.onPress('FillNewForm') } />
-          </Components.MenuGroup>
-          <Components.MenuGroup>
-            <Components.MenuButton  icon='edit'     title={ I18n.t('mainMenu.editSavedForm') }   color='#23408F' onPress={ () => this.onPress('EditForm') } />
-            <Components.MenuButton  icon='send'     title={ I18n.t('mainMenu.submitForm') }      color='#23408F' onPress={ () => this.onPress('SubmitForm') } />
-          </Components.MenuGroup>
-          <Components.MenuGroup>
-            <Components.MenuButton  icon='eye'      title={ I18n.t('mainMenu.viewSentForm') }    color='#23408F' onPress={ () => this.onPress('ViewForm') } />
-            <Components.MenuButton  icon='trash'    title={ I18n.t('mainMenu.deleteForm') }      color='#EE1C24' onPress={ () => this.onPress('DeleteForm') } />
-          </Components.MenuGroup>
-        </Components.MenuWrapper>
-      </Components.Container>
+      <Camera/>
     );
   }
 }

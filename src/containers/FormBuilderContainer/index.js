@@ -193,14 +193,14 @@ class FormBuilderContainer extends Component {
       )
       case 'image': return (
         <MediaPicker
-          type='Image'
+          type='image'
           label={ question.title }
           hint={ question.hint }
         />
       )
       case 'video': return (
         <MediaPicker
-          type='Video'
+          type='video'
           label={ question.title }
           hint={ question.hint }
         />

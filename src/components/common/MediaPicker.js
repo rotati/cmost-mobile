@@ -20,24 +20,38 @@ export default class MediaPicker extends Component {
   }
 
   selectMediaTapped = () => {
-    const options = this.props.type === 'Image' ? this.imageOptions : this.videoOptions
+    const options = this.props.type === 'image' ? this.imageOptions : this.videoOptions
 
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled video picker');
-      }
-      else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      }
-      else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+      if (response.didCancel) return
+      if (response.error) {
+        alert('ImagePicker Error: ', response.error);
       }
       else {
-        console.log(response.uri)
+        this.uploadMedia(response)
       }
     });
+  }
+
+  uploadMedia = (response) => {
+    const uri       = response.uri
+    const name      = this.getFileName(response)
+    const path      = response.path !== undefined ? `file://${response.path}` : response.uri
+    const extension = name.substring(name.lastIndexOf('.') + 1)
+    const type      = `${this.props.type}/${extension}`
+
+    const upload    = { path, uri, name, type }
+    console.log(upload)
+  }
+
+  getFileName = (file) => {
+    let fileName = file.fileName
+    if (fileName === undefined) {
+      const path = file.path
+      fileName   = path.substring(path.lastIndexOf('/') + 1)
+    }
+
+    return fileName
   }
 
   render() {

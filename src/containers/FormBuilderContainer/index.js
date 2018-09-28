@@ -17,6 +17,7 @@ import DatePicker           from '../../components/common/DatePicker'
 import TimePicker           from '../../components/common/TimePicker'
 import MapSelect            from '../../components/common/MapSelect'
 import MultipleSelect       from '../../components/common/MultipleSelect'
+import MediaPicker          from '../../components/common/MediaPicker'
 import * as Components      from './components'
 
 import { Text, TouchableOpacity } from 'react-native'
@@ -188,6 +189,20 @@ class FormBuilderContainer extends Component {
           onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
           value={ answer }
           options={ question.options.data }
+        />
+      )
+      case 'image': return (
+        <MediaPicker
+          type='Image'
+          label={ question.title }
+          hint={ question.hint }
+        />
+      )
+      case 'video': return (
+        <MediaPicker
+          type='Video'
+          label={ question.title }
+          hint={ question.hint }
         />
       )
 

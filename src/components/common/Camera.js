@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, PermissionsAndroid } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 
 const PendingView = () => (
@@ -16,23 +16,51 @@ const PendingView = () => (
 );
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      shouldreadbarcode: true,
+      isReady: false
+    };
+  }
+
+  reScanBarcode() {
+    if(this.camera) {
+      this.camera.resumePreview();
+      this.setState({ shouldreadbarcode: true })
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <RNCamera
-          style={styles.preview}
+          ref={ref => { this.camera = ref; }}
+          style={ this.state.isReady ? styles.preview : {}}
           type={RNCamera.Constants.Type.back}
-          flashMode={RNCamera.Constants.FlashMode.on}
+          flashMode={RNCamera.Constants.FlashMode.off}
           permissionDialogTitle={'Permission to use camera'}
           permissionDialogMessage={'We need your permission to use your camera phone'}
           barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
+          onBarCodeRead={(barcodes) => {
+            this.camera.pausePreview();
+            if(this.state.shouldreadbarcode) {
+              alert("Type => " + JSON.stringify(barcodes.type) + "Data => " + JSON.stringify(barcodes.data))
+            }
+            this.setState({ shouldreadbarcode: false });
+          }}
+          onCameraReady={() => this.setState({ isReady: true })}
         >
           {({ camera, status }) => {
-            if (status !== 'READY') return <PendingView />;
+            if (status !== 'READY' || !this.state.isReady) return <PendingView />;
             return (
               <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                 <TouchableOpacity onPress={() => this.takePicture(camera)} style={styles.capture}>
                   <Text style={{ fontSize: 14 }}> SNAP </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.reScanBarcode()} style={styles.capture}>
+                  <Text style={{ fontSize: 14 }}> Rescan Barcode </Text>
                 </TouchableOpacity>
               </View>
             );

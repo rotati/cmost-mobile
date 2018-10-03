@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
-import ImagePicker          from 'react-native-image-picker'
-import styled               from 'styled-components'
+import React, { Component }  from 'react'
+import { Image, Dimensions } from 'react-native'
+import Video                 from './VideoPlayer'
+import ImagePicker           from 'react-native-image-picker'
+import styled                from 'styled-components'
 
 export default class MediaPicker extends Component {
   imageOptions = {
@@ -25,7 +27,7 @@ export default class MediaPicker extends Component {
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) return
       if (response.error) {
-        alert('ImagePicker Error: ', response.error);
+        alert('There was a problem while opening picker. ', response.error);
       }
       else {
         this.uploadMedia(response)
@@ -41,7 +43,7 @@ export default class MediaPicker extends Component {
     const type      = `${this.props.type}/${extension}`
 
     const upload    = { path, uri, name, type }
-    console.log(upload)
+    this.props.onChange(upload)
   }
 
   getFileName = (file) => {
@@ -54,6 +56,27 @@ export default class MediaPicker extends Component {
     return fileName
   }
 
+  previewer = () => {
+    const { type, value = {} } = this.props
+    const uri = value.uri
+
+    if (type === 'image' && !!uri) return this.imagePreviewer(uri)
+    else if (type === 'video' && !!uri) return this.videoPlayer(uri)
+  }
+
+  imagePreviewer = (uri) => (
+    <ImageWrapper>
+      <ImagePreviewer
+        source={{ uri }}
+        resizeMode='contain'
+      />
+    </ImageWrapper>
+  )
+
+  videoPlayer = (uri) => (
+    <Video uri={uri} />
+  )
+
   render() {
     const { type, label, hint } = this.props
 
@@ -64,6 +87,7 @@ export default class MediaPicker extends Component {
         <PickerButton onPress={ () => this.selectMediaTapped() }>
           <PickerText>Please Choose</PickerText>
         </PickerButton>
+        { this.previewer() }
       </Wrapper>
     );
   }
@@ -95,4 +119,16 @@ const PickerButton = styled.TouchableOpacity`
 const PickerText = styled.Text`
   font-size: 15px;
   color: #fff;
+`
+
+const ImageWrapper = styled.View`
+  margin-top: 15px;
+  border-color: #ddd;
+  border-width: 1px;
+`
+
+const ImagePreviewer = styled(Image)`
+  height: ${ (Dimensions.get('window').width - 40) };
+  flex: 1;
+  width: null;
 `

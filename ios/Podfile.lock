@@ -37,6 +37,8 @@ PODS:
     - React
   - react-native-maps (0.21.0):
     - React
+  - react-native-video (3.2.1):
+    - React
   - React/Core (0.55.4):
     - yoga (= 0.55.4.React)
   - React/CxxBridge (0.55.4):
@@ -95,6 +97,7 @@ DEPENDENCIES:
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -132,6 +135,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-picker"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   RNI18n:
     :path: "../node_modules/react-native-i18n"
   yoga:
@@ -148,9 +153,10 @@ SPEC CHECKSUMS:
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-image-picker: b303e31c3c4ada1d7cb1342423d328d2efb07fb3
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
+  react-native-video: 6db316323366025251a815c49ca0e2edabe30a2a
   RNI18n: 46b8694063fbd699f2c06a4dc8e835b3176763b1
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 31e7457b105a2b80dfd750f9aeaa51ddda5bca77
+PODFILE CHECKSUM: 234470f9d7af1d00f1e3927a1032537567f11814
 
 COCOAPODS: 1.5.3

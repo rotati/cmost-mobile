@@ -196,6 +196,8 @@ class FormBuilderContainer extends Component {
           type='image'
           label={ question.title }
           hint={ question.hint }
+          value={ answer }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
         />
       )
       case 'video': return (
@@ -203,6 +205,8 @@ class FormBuilderContainer extends Component {
           type='video'
           label={ question.title }
           hint={ question.hint }
+          value={ answer }
+          onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
         />
       )
 

@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2</string>
+	<string>1.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>4</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -72,5 +72,14 @@
 	<string>CMOST needs Location access for rendering a few type of question!</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>CMOST needs Location access for rendering a few type of question!</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>CMOST would like access to your photo gallery</string>
+  <key>NSCameraUsageDescription</key>
+  <string>CMOST would like to use your camera</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>CMOST would like to save photos to your photo gallery</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>CMOST would like to your microphone for videos recording</string>
+
 </dict>
 </plist>

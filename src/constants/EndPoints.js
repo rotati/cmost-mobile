@@ -7,4 +7,5 @@ export const API_KEY = "b6c5320797ce0404c5d4f8350b01e36b"
 
 export const DOWNLOAD_FORM_URL = BASE_URL.staging + "forms"
 export const SUBMIT_FORM_URL   = BASE_URL.staging + "responses"
-export const CREATE_OPTION_URL = (id) => BASE_URL.staging + "option_sets/" + id 
+export const CREATE_OPTION_URL = (id) => BASE_URL.staging + "option_sets/" + id
+export const MEDIA_UPLOAD_URL  = (type) => BASE_URL.staging + "media/" + type

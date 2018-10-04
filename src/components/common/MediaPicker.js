@@ -3,8 +3,17 @@ import { Image, Dimensions } from 'react-native'
 import Video                 from './VideoPlayer'
 import ImagePicker           from 'react-native-image-picker'
 import styled                from 'styled-components'
+import axios                 from 'axios'
+import Loading               from '../../components/common/Loading'
+
+import { MEDIA_UPLOAD_URL, API_KEY } from '../../constants/EndPoints'
 
 export default class MediaPicker extends Component {
+
+  state = {
+    loading: false
+  }
+
   imageOptions = {
     quality: 1.0,
     maxWidth: 500,
@@ -22,6 +31,8 @@ export default class MediaPicker extends Component {
   }
 
   selectMediaTapped = () => {
+    if (this.state.loading) return
+
     const options = this.props.type === 'image' ? this.imageOptions : this.videoOptions
 
     ImagePicker.showImagePicker(options, (response) => {
@@ -43,7 +54,23 @@ export default class MediaPicker extends Component {
     const type      = `${this.props.type}/${extension}`
 
     const upload    = { path, uri, name, type }
-    this.props.onChange(upload)
+    const headers   = { headers: { Authorization: "Token " + API_KEY, "Content-Type": "multipart/form-data" } }
+    const mediaType = this.props.type + "s"
+    const endPoint  = MEDIA_UPLOAD_URL(mediaType)
+
+    const formData  = new FormData()
+    formData.append('upload', upload)
+
+    this.setState({ loading: true })
+    axios.post(endPoint, formData, headers)
+      .then(result => {
+        const media_object_id = result.data.id
+        this.props.onChange({ ...upload, media_object_id })
+        this.setState({ loading: false })
+      })
+      .catch(function (error) {
+        alert(error)
+      })
   }
 
   getFileName = (file) => {
@@ -85,6 +112,7 @@ export default class MediaPicker extends Component {
         <Label>{ label }</Label>
         { hint && <Hint>{ hint }</Hint> }
         <PickerButton onPress={ () => this.selectMediaTapped() }>
+          { this.state.loading && <Loading/> }
           <PickerText>Please Choose</PickerText>
         </PickerButton>
         { this.previewer() }

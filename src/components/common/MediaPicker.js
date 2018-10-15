@@ -1,12 +1,12 @@
 import React, { Component }  from 'react'
-import { Image, Dimensions, Platform } from 'react-native'
 import Video                 from './VideoPlayer'
 import ImagePicker           from 'react-native-image-picker'
 import styled                from 'styled-components'
 import axios                 from 'axios'
 import Loading               from '../../components/common/Loading'
 
-import { MEDIA_UPLOAD_URL, API_KEY } from '../../constants/EndPoints'
+import { Image, Dimensions, Platform } from 'react-native'
+import { MEDIA_UPLOAD_URL, API_KEY }   from '../../constants/EndPoints'
 
 export default class MediaPicker extends Component {
 
@@ -74,7 +74,7 @@ export default class MediaPicker extends Component {
   }
 
   getFileName = (file) => {
-    let fileName = fileName = file.uri.split('/').pop();
+    let fileName = file.uri.split('/').pop();
     if(Platform.OS === 'android') {
       fileName = file.path.split('/').pop();
     }

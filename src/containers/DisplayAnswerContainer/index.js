@@ -1,12 +1,13 @@
-import React, { Component }      from 'react'
-import { connect }               from 'react-redux'
-import { View }                  from 'react-native'
-import { isEmpty, map, forEach } from 'lodash'
-import styled                    from 'styled-components'
-import moment                    from 'moment'
-import FormActions               from '../../redux/FormReducer'
-import Card                      from '../../components/common/Card'
-import Container                 from '../../components/common/Container'
+import React, { Component }        from 'react'
+import { connect }                 from 'react-redux'
+import { View, Image, Dimensions } from 'react-native'
+import { isEmpty, map, forEach }   from 'lodash'
+import styled                      from 'styled-components'
+import moment                      from 'moment'
+import FormActions                 from '../../redux/FormReducer'
+import Card                        from '../../components/common/Card'
+import Container                   from '../../components/common/Container'
+import Video                       from '../../components/common/VideoPlayer'
 
 class AnswerDetailContainer extends Component {
   state = {
@@ -57,12 +58,23 @@ class AnswerDetailContainer extends Component {
     return questions
   }
 
-  renderQuestion = (question, answer) => (
-    <View key={ question.id }>
-      <Question>{ question.title }</Question>
-      <Answer>{ this.castAnswer(question, answer) }</Answer>
-    </View>
-  )
+  renderQuestion = (question, answer) => {
+    if (question.type === 'image' || question.type === 'video') {
+      return (
+        <MediaWrapper key={ question.id }>
+          <Question>{ question.title }</Question>
+          { this.castAnswer(question, answer) }
+        </MediaWrapper>
+      )
+    } else {
+      return (
+        <View key={ question.id }>
+          <Question>{ question.title }</Question>
+          <Answer>{ this.castAnswer(question, answer) }</Answer>
+        </View>
+      )
+    }
+  }
 
   castAnswer = (question, answer) => {
     if (!answer) return ''
@@ -90,6 +102,19 @@ class AnswerDetailContainer extends Component {
       case 'time':
         const time = answer["time_value(4i)"] + ':' + answer["time_value(5i)"]
         return moment(time, 'kk:mm').format('hh:mm A')
+
+      case 'image':
+        return (
+          <ImageWrapper>
+            <ImagePreviewer
+              source={{ uri: answer.uri }}
+              resizeMode='contain'
+            />
+          </ImageWrapper>
+        )
+
+      case 'video':
+        return <Video uri={ answer.uri } />
       
       default: return answer.value
     }
@@ -119,6 +144,22 @@ const Question = styled.Text`
 
 const Answer = styled.Text`
   font-style: italic;
+  margin-bottom: 20px;
+`
+
+const ImageWrapper = styled.View`
+  margin-top: 15px;
+  border-color: #ddd;
+  border-width: 1px;
+`
+
+const ImagePreviewer = styled(Image)`
+  height: ${ (Dimensions.get('window').width - 40) };
+  flex: 1;
+  width: null;
+`
+
+const MediaWrapper = styled.View`
   margin-bottom: 20px;
 `
 

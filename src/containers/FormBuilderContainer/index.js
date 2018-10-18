@@ -18,6 +18,7 @@ import TimePicker           from '../../components/common/TimePicker'
 import MapSelect            from '../../components/common/MapSelect'
 import MultipleSelect       from '../../components/common/MultipleSelect'
 import MediaPicker          from '../../components/common/MediaPicker'
+import BarcodeScanner       from '../../components/common/Barcode'
 import * as Components      from './components'
 
 import { Text, TouchableOpacity } from 'react-native'
@@ -207,6 +208,15 @@ class FormBuilderContainer extends Component {
           hint={ question.hint }
           value={ answer }
           onChange={ (answer) => this.handleAnswerChange(question.id, answer) }
+        />
+      )
+
+      case 'barcode': return (
+        <BarcodeScanner
+          label={ question.title }
+          hint={ question.hint }
+          value={ answer.value }
+          onChange={ (answer) => this.handleAnswerChange(question.id, { value: answer }) }
         />
       )
 

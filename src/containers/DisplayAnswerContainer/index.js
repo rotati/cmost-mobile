@@ -63,7 +63,7 @@ class AnswerDetailContainer extends Component {
       return (
         <MediaWrapper key={ question.id }>
           <Question>{ question.title }</Question>
-          { this.castAnswer(question, answer) }
+          { !!answer && this.castAnswer(question, answer) }
         </MediaWrapper>
       )
     } else {

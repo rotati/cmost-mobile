@@ -40,8 +40,10 @@ class EditFormContainer extends Component {
   }
 }
 
+const isSubmitted = (state, res) => ( res.submitted || state.submitResponses.data.includes(res.id) )
+
 const mapStateToProps = (state) => ({
-  responses: Object.values(state.responses.data)
+  responses: Object.values(state.responses.data).filter((res) => !isSubmitted(state, res) )
 })
 
 const mapDispatchToProps = (dispatch) => ({
